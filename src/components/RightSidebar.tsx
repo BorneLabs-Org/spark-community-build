@@ -3,6 +3,7 @@ import React from 'react';
 import { useAppContext } from '@/context/AppContext';
 import { ProjectDialog } from './ProjectDialog';
 import { PostDialog } from './PostDialog';
+import { StoryDialog } from './StoryDialog';
 import { FileText, BookOpen } from 'lucide-react';
 import { 
   Dialog,
@@ -41,15 +42,20 @@ const RightSidebar = () => {
           <span>Publish Paper</span>
         </Button>
         
-        <Button 
-          className="w-full bg-gray-800 hover:bg-gray-700 border border-gray-700 flex justify-start items-center" 
-          variant="outline"
-        >
-          <div className="p-1 mr-2 bg-gray-700 rounded">
-            <BookOpen size={16} />
-          </div>
-          <span>Write Story</span>
-        </Button>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button 
+              className="w-full bg-gray-800 hover:bg-gray-700 border border-gray-700 flex justify-start items-center" 
+              variant="outline"
+            >
+              <div className="p-1 mr-2 bg-gray-700 rounded">
+                <BookOpen size={16} />
+              </div>
+              <span>Write Story</span>
+            </Button>
+          </DialogTrigger>
+          <StoryDialog />
+        </Dialog>
         
         <Dialog>
           <DialogTrigger asChild>

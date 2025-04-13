@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState } from 'react';
 import { User, Project, Post, Story } from '../types';
 
@@ -12,6 +11,7 @@ export interface AppContextType {
   setCurrentUser: (user: User | null) => void;
   addProject: (project: Project) => void;
   addPost: (post: Post) => void;
+  addStory: (story: Story) => void;
 }
 
 const defaultContext: AppContextType = {
@@ -24,6 +24,7 @@ const defaultContext: AppContextType = {
   setCurrentUser: () => {},
   addProject: () => {},
   addPost: () => {},
+  addStory: () => {},
 };
 
 const AppContext = createContext<AppContextType>(defaultContext);
@@ -197,6 +198,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setPosts(prev => [post, ...prev]);
   };
   
+  const addStory = (story: Story) => {
+    setStories(prev => [story, ...prev]);
+  };
+  
   const value = {
     currentUser,
     projects,
@@ -207,6 +212,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setCurrentUser,
     addProject,
     addPost,
+    addStory,
   };
   
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

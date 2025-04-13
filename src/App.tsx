@@ -8,6 +8,7 @@ import { AppProvider } from './context/AppContext';
 import Index from './pages/Index';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
+import Stories from './pages/Stories';
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,6 +24,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
+            <Route path="/stories" element={<Stories />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

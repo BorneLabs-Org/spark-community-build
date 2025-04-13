@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Home, Users, Flask, BookOpen, FileText, Save, HelpCircle, FileSearch } from 'lucide-react';
+import { Home, Users, BeakerIcon, BookOpen, FileText, Save, HelpCircle, FileSearch } from 'lucide-react';
 
 const Sidebar = () => {
   return (
@@ -22,7 +21,7 @@ const Sidebar = () => {
           </li>
           <li>
             <Link to="/lab" className="flex items-center p-2 rounded-lg hover:bg-gray-800 text-white">
-              <Flask className="w-5 h-5 mr-2" />
+              <BookOpen className="w-5 h-5 mr-2" />
               <span>Lab</span>
             </Link>
           </li>

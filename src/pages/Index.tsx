@@ -46,25 +46,6 @@ const Index = () => {
           <div className="mb-10">
             <div className="flex justify-between items-center mb-4">
               <div className="flex items-center">
-                <div className="text-branding-amber mr-2">📚</div>
-                <h2 className="text-xl font-bold text-white">From Community Stories</h2>
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {stories.slice(0, 4).map(story => (
-                <StoryCard key={story.id} story={story} isCompact={true} />
-              ))}
-              
-              <Link to="/stories" className="flex items-center justify-center text-gray-400 hover:text-white">
-                <ChevronRight size={24} />
-              </Link>
-            </div>
-          </div>
-          
-          <div>
-            <div className="flex justify-between items-center mb-4">
-              <div className="flex items-center">
                 <div className="text-branding-amber mr-2">👥</div>
                 <h2 className="text-xl font-bold text-white">From Community page</h2>
               </div>
@@ -76,6 +57,25 @@ const Index = () => {
               ))}
               
               <Link to="/community" className="flex items-center justify-center text-gray-400 hover:text-white">
+                <ChevronRight size={24} />
+              </Link>
+            </div>
+          </div>
+          
+          <div>
+            <div className="flex justify-between items-center mb-4">
+              <div className="flex items-center">
+                <div className="text-branding-amber mr-2">📚</div>
+                <h2 className="text-xl font-bold text-white">From Community Stories</h2>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {stories.slice(0, 4).map(story => (
+                <StoryCard key={story.id} story={story} isCompact={true} />
+              ))}
+              
+              <Link to="/stories" className="flex items-center justify-center text-gray-400 hover:text-white">
                 <ChevronRight size={24} />
               </Link>
             </div>

@@ -10,11 +10,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { Story } from '@/types';
+import { Image } from 'lucide-react';
 
 const formSchema = z.object({
   title: z.string().min(5, { message: 'Title must be at least 5 characters' }).max(100),
   content: z.string().min(20, { message: 'Content must be at least 20 characters' }),
   projectId: z.string().optional(),
+  imageUrl: z.string().optional(),
 });
 
 export const StoryDialog = () => {
@@ -27,6 +29,7 @@ export const StoryDialog = () => {
       title: '',
       content: '',
       projectId: '',
+      imageUrl: '',
     },
   });
   
@@ -42,6 +45,7 @@ export const StoryDialog = () => {
       content: values.content,
       user: currentUser,
       createdAt: new Date().toISOString(),
+      image: values.imageUrl || undefined,
     };
     
     // Add the story to the context
@@ -75,6 +79,27 @@ export const StoryDialog = () => {
                     {...field}
                     className="bg-[#222] border-gray-700 text-white"
                   />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="imageUrl"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-white">Image URL (Optional)</FormLabel>
+                <FormControl>
+                  <div className="relative">
+                    <Input
+                      placeholder="https://example.com/image.jpg"
+                      {...field}
+                      className="bg-[#222] border-gray-700 text-white pl-9"
+                    />
+                    <Image className="absolute left-3 top-3 h-4 w-4 text-gray-500" />
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>

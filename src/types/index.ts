@@ -36,4 +36,5 @@ export interface Story {
   user: User;
   bookmarked?: boolean;
   createdAt: string;
+  image?: string;
 }

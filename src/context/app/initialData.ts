@@ -143,7 +143,8 @@ export const initialStories: Story[] = [
       followers: 345
     },
     project: initialProjects[1],
-    createdAt: "2023-05-10T09:30:00Z"
+    createdAt: "2023-05-10T09:30:00Z",
+    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"
   },
   {
     id: "2",
@@ -156,6 +157,34 @@ export const initialStories: Story[] = [
       avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=100&auto=format&fit=crop",
       followers: 1823
     },
-    createdAt: "2023-05-15T14:20:00Z"
+    createdAt: "2023-05-15T14:20:00Z",
+    image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e"
+  },
+  {
+    id: "3",
+    title: "Understanding Neural Network Architecture",
+    content: "Neural networks are the backbone of modern AI systems. In this deep dive, I explore how different architectures serve different purposes and how to select the right one for your application. From convolutional networks for image processing to recurrent networks for sequence data, each type has unique strengths.",
+    user: {
+      id: "3",
+      name: "Alex Johnson",
+      username: "alexj",
+      avatar: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?q=80&w=100&auto=format&fit=crop",
+      followers: 512
+    },
+    createdAt: "2023-05-20T11:15:00Z"
+  },
+  {
+    id: "4",
+    title: "The Future of Sustainable Tech",
+    content: "As we face increasing environmental challenges, the tech industry must adapt. I've been researching how companies can reduce their carbon footprint while still innovating. From energy-efficient hardware to carbon-neutral data centers, the solutions are out there - we just need to implement them at scale.",
+    user: {
+      id: "1",
+      name: "John Doe",
+      username: "johndoe",
+      avatar: "https://images.unsplash.com/photo-1618077360395-f3068be8e001?q=80&w=100&auto=format&fit=crop",
+      followers: 210
+    },
+    createdAt: "2023-05-25T16:40:00Z",
+    image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b"
   }
 ];

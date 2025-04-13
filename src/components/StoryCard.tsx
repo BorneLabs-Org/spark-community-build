@@ -9,22 +9,23 @@ import { formatDistanceToNow } from 'date-fns';
 
 interface StoryCardProps {
   story: Story;
+  isCompact?: boolean;
 }
 
-const StoryCard = ({ story }: StoryCardProps) => {
-  const { title, content, user, createdAt, project } = story;
+const StoryCard = ({ story, isCompact = false }: StoryCardProps) => {
+  const { title, content, user, createdAt, project, image } = story;
   
   // Format the date to relative time (e.g., "3 days ago")
   const formattedDate = formatDistanceToNow(new Date(createdAt), { addSuffix: true });
   
   // Truncate the content to a reasonable length for preview
-  const truncatedContent = content.length > 200 
-    ? `${content.substring(0, 200)}...` 
+  const truncatedContent = content.length > (isCompact ? 100 : 200) 
+    ? `${content.substring(0, isCompact ? 100 : 200)}...` 
     : content;
 
   return (
     <Card className="bg-[#1a1a1a] border-gray-800 hover:border-gray-700 transition-all overflow-hidden">
-      <div className="p-6">
+      <div className={`${isCompact ? 'p-4' : 'p-6'}`}>
         <div className="flex justify-between items-start mb-4">
           <div className="flex items-center gap-3">
             <Avatar className="h-10 w-10 border border-gray-700">
@@ -49,8 +50,27 @@ const StoryCard = ({ story }: StoryCardProps) => {
         </div>
         
         <Link to={`/stories/${story.id}`} className="block">
-          <h2 className="text-xl font-bold text-white mb-2 hover:text-blue-400 transition-colors">{title}</h2>
-          <p className="text-gray-300 mb-4 leading-relaxed">{truncatedContent}</p>
+          <h2 className={`${isCompact ? 'text-lg' : 'text-xl'} font-bold text-white mb-2 hover:text-blue-400 transition-colors`}>{title}</h2>
+          
+          {image ? (
+            <div className="flex flex-col md:flex-row gap-4 mb-4">
+              <div className="md:w-1/3">
+                <img 
+                  src={image} 
+                  alt={title} 
+                  className="w-full h-40 object-cover rounded"
+                />
+              </div>
+              <div className="md:w-2/3">
+                <p className="text-gray-300 leading-relaxed">{truncatedContent}</p>
+              </div>
+            </div>
+          ) : (
+            <div className="relative">
+              <p className="text-gray-300 mb-4 leading-relaxed">{truncatedContent}</p>
+              <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-[#1a1a1a] to-transparent"></div>
+            </div>
+          )}
         </Link>
         
         <div className="flex items-center justify-between mt-4 text-sm">

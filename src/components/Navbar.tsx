@@ -9,7 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useAppContext } from '@/context/AppContext';
+import { useAppContext } from '@/context/app';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 

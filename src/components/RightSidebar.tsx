@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { useAppContext } from '@/context/AppContext';
+import { useAppContext } from '@/context/app';
 import { ProjectDialog } from './ProjectDialog';
 import { PostDialog } from './PostDialog';
 import { StoryDialog } from './StoryDialog';

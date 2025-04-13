@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { useAppContext } from '@/context/AppContext';
+import { useAppContext } from '@/context/app';
 import Navbar from '@/components/Navbar';
 import Sidebar from '@/components/Sidebar';
 import RightSidebar from '@/components/RightSidebar';

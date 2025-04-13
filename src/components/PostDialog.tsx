@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { useAppContext } from '@/context/AppContext';
+import { useAppContext } from '@/context/app';
 import { DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

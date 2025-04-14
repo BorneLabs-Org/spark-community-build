@@ -16,10 +16,12 @@ import {
   CarouselNext,
   CarouselPrevious
 } from '@/components/ui/carousel';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const Index = () => {
   const { projects, posts, stories, isLoggedIn } = useAppContext();
   const projectsRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
   
   return (
     <div className="min-h-screen bg-[#121212] flex flex-col">
@@ -28,11 +30,13 @@ const Index = () => {
       </div>
       
       <div className="flex flex-1 pt-[60px]">
-        <div className="fixed top-[60px] bottom-0 left-0 w-56 overflow-y-auto">
+        {/* Left Sidebar - hidden on mobile */}
+        <div className="hidden md:block fixed top-[60px] bottom-0 left-0 w-56 overflow-y-auto">
           <Sidebar />
         </div>
         
-        <main className="flex-1 overflow-y-auto py-6 px-8 ml-56 mr-[isLoggedIn ? '16rem' : '0']">
+        {/* Main Content - properly spaced from sidebars */}
+        <main className="flex-1 overflow-y-auto py-6 px-4 md:px-8 md:ml-56 md:mr-64 w-full">
           <div className="mb-10">
             <div className="flex justify-between items-center mb-4">
               <div className="flex items-center">
@@ -48,7 +52,7 @@ const Index = () => {
               <Carousel>
                 <CarouselContent>
                   {projects.map(project => (
-                    <CarouselItem key={project.id} className="basis-1/4 lg:basis-1/4 md:basis-1/3 sm:basis-1/2">
+                    <CarouselItem key={project.id} className="basis-1/2 md:basis-1/3 lg:basis-1/4">
                       <ProjectCard project={project} />
                     </CarouselItem>
                   ))}
@@ -67,7 +71,7 @@ const Index = () => {
               </div>
             </div>
             
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
               {posts.slice(0, 20).map(post => (
                 <PostCard key={post.id} post={post} />
               ))}
@@ -98,8 +102,9 @@ const Index = () => {
           </div>
         </main>
         
+        {/* Right Sidebar - hidden on mobile and properly positioned */}
         {isLoggedIn && (
-          <div className="fixed top-[60px] bottom-0 right-0 w-64 overflow-y-auto">
+          <div className="hidden md:block fixed top-[60px] bottom-0 right-0 w-64 overflow-y-auto">
             <RightSidebar />
           </div>
         )}

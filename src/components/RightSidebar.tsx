@@ -4,23 +4,26 @@ import { useAppContext } from '@/context/app';
 import { ProjectDialog } from './ProjectDialog';
 import { PostDialog } from './PostDialog';
 import { StoryDialog } from './StoryDialog';
-import { FileText, BookOpen } from 'lucide-react';
+import { FileText, BookOpen, Menu } from 'lucide-react';
 import { 
   Dialog,
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const RightSidebar = () => {
   const { isLoggedIn } = useAppContext();
   const [projectDialogOpen, setProjectDialogOpen] = useState(false);
   const [storyDialogOpen, setStoryDialogOpen] = useState(false);
   const [postDialogOpen, setPostDialogOpen] = useState(false);
+  const isMobile = useIsMobile();
   
   if (!isLoggedIn) return null;
-  
-  return (
-    <div className="w-64 bg-[#0a0a0a] border-l border-gray-800 h-full flex flex-col">
+
+  const SidebarContent = () => (
+    <div className="w-full h-full bg-[#0a0a0a] border-l border-gray-800 flex flex-col">
       <div className="p-4 space-y-4">
         <Dialog open={projectDialogOpen} onOpenChange={setProjectDialogOpen}>
           <DialogTrigger asChild>
@@ -74,6 +77,27 @@ const RightSidebar = () => {
       </div>
     </div>
   );
+  
+  // For mobile, we'll use a Sheet component that slides in
+  if (isMobile) {
+    return (
+      <div className="md:hidden fixed bottom-4 right-4 z-40">
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button size="icon" className="rounded-full bg-teal-700 hover:bg-teal-600">
+              <Menu className="h-6 w-6" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="right" className="p-0 w-[260px]">
+            <SidebarContent />
+          </SheetContent>
+        </Sheet>
+      </div>
+    );
+  }
+  
+  // For desktop, return the normal sidebar
+  return <SidebarContent />;
 };
 
 export default RightSidebar;

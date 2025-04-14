@@ -32,7 +32,8 @@ const RightSidebar = () => {
               <span>Start Project</span>
             </Button>
           </DialogTrigger>
-          <ProjectDialog onComplete={() => setProjectDialogOpen(false)} />
+          {/* Removing the onComplete prop since ProjectDialog doesn't support it */}
+          <ProjectDialog />
         </Dialog>
         
         <Button 

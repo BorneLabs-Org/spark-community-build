@@ -7,7 +7,7 @@ import RightSidebar from '@/components/RightSidebar';
 import ProjectCard from '@/components/ProjectCard';
 import PostCard from '@/components/PostCard';
 import StoryCard from '@/components/StoryCard';
-import { ChevronRight, Filter, ChevronLeft } from 'lucide-react';
+import { ChevronRight, Filter } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { 
   Carousel,
@@ -23,16 +23,16 @@ const Index = () => {
   
   return (
     <div className="min-h-screen bg-[#121212] flex flex-col">
-      <div className="sticky top-0 z-50">
+      <div className="fixed top-0 left-0 right-0 z-50">
         <Navbar />
       </div>
       
-      <div className="flex flex-1 overflow-hidden">
-        <div className="sticky top-0 h-screen">
+      <div className="flex flex-1 pt-[60px]">
+        <div className="fixed top-[60px] bottom-0 left-0 w-56 overflow-y-auto">
           <Sidebar />
         </div>
         
-        <main className="flex-1 overflow-y-auto py-6 px-8">
+        <main className="flex-1 overflow-y-auto py-6 px-8 ml-56 mr-[isLoggedIn ? '16rem' : '0']">
           <div className="mb-10">
             <div className="flex justify-between items-center mb-4">
               <div className="flex items-center">
@@ -99,7 +99,7 @@ const Index = () => {
         </main>
         
         {isLoggedIn && (
-          <div className="sticky top-0 h-screen">
+          <div className="fixed top-[60px] bottom-0 right-0 w-64 overflow-y-auto">
             <RightSidebar />
           </div>
         )}

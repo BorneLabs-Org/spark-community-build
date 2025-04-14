@@ -19,8 +19,8 @@ const StoryCard = ({ story, isCompact = false }: StoryCardProps) => {
   const formattedDate = formatDistanceToNow(new Date(createdAt), { addSuffix: true });
   
   // Truncate the content to a reasonable length for preview
-  const truncatedContent = content.length > (isCompact ? 100 : 200) 
-    ? `${content.substring(0, isCompact ? 100 : 200)}...` 
+  const truncatedContent = content.length > (isCompact ? 180 : 350) 
+    ? `${content.substring(0, isCompact ? 180 : 350)}...` 
     : content;
 
   return (
@@ -66,9 +66,9 @@ const StoryCard = ({ story, isCompact = false }: StoryCardProps) => {
               </div>
             </div>
           ) : (
-            <div className="relative">
-              <p className="text-gray-300 mb-4 leading-relaxed">{truncatedContent}</p>
-              <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-[#1a1a1a] to-transparent"></div>
+            <div className="relative min-h-[120px] mb-6">
+              <p className="text-gray-300 leading-relaxed">{truncatedContent}</p>
+              <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#1a1a1a] to-transparent"></div>
             </div>
           )}
         </Link>

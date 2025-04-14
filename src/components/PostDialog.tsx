@@ -9,7 +9,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Upload } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
-export const PostDialog = () => {
+interface PostDialogProps {
+  onComplete?: () => void;
+}
+
+export const PostDialog = ({ onComplete }: PostDialogProps) => {
   const { addPost, currentUser } = useAppContext();
   const { toast } = useToast();
   const [title, setTitle] = useState('');
@@ -73,6 +77,11 @@ export const PostDialog = () => {
     setDescription('');
     setMediaFile(null);
     setMediaPreview(null);
+    
+    // Close the dialog
+    if (onComplete) {
+      onComplete();
+    }
   };
   
   return (

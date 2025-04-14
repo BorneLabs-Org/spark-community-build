@@ -11,8 +11,8 @@ interface PostCardProps {
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
   return (
     <div className="relative w-full max-w-xs">
-      <div className="relative bg-[#121212] rounded-md overflow-hidden group cursor-pointer">
-        <div className="aspect-[4/3] overflow-hidden">
+      <div className="relative bg-[#121212] rounded-md overflow-hidden group cursor-pointer h-full">
+        <div className="aspect-[3/2] overflow-hidden">
           <img 
             src={post.media} 
             alt={post.title} 

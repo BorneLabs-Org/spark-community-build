@@ -11,6 +11,11 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { Story } from '@/types';
 import { Image } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+
+interface StoryDialogProps {
+  onComplete?: () => void;
+}
 
 const formSchema = z.object({
   title: z.string().min(5, { message: 'Title must be at least 5 characters' }).max(100),
@@ -19,8 +24,9 @@ const formSchema = z.object({
   imageUrl: z.string().optional(),
 });
 
-export const StoryDialog = () => {
+export const StoryDialog = ({ onComplete }: StoryDialogProps) => {
   const { currentUser, addStory } = useAppContext();
+  const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const form = useForm<z.infer<typeof formSchema>>({
@@ -51,9 +57,20 @@ export const StoryDialog = () => {
     // Add the story to the context
     addStory(newStory);
     
-    // Reset the form and close the dialog
+    // Show success toast
+    toast({
+      title: "Story published",
+      description: "Your story has been successfully published",
+    });
+    
+    // Reset the form
     form.reset();
     setIsSubmitting(false);
+    
+    // Close the dialog
+    if (onComplete) {
+      onComplete();
+    }
   };
   
   return (

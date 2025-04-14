@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useAppContext } from '@/context/app';
 import { ProjectDialog } from './ProjectDialog';
 import { PostDialog } from './PostDialog';
@@ -13,13 +13,16 @@ import { Button } from '@/components/ui/button';
 
 const RightSidebar = () => {
   const { isLoggedIn } = useAppContext();
+  const [projectDialogOpen, setProjectDialogOpen] = useState(false);
+  const [storyDialogOpen, setStoryDialogOpen] = useState(false);
+  const [postDialogOpen, setPostDialogOpen] = useState(false);
   
   if (!isLoggedIn) return null;
   
   return (
     <div className="w-64 bg-[#0a0a0a] border-l border-gray-800 h-full flex flex-col">
       <div className="p-4 space-y-4">
-        <Dialog>
+        <Dialog open={projectDialogOpen} onOpenChange={setProjectDialogOpen}>
           <DialogTrigger asChild>
             <Button 
               className="w-full bg-gray-800 hover:bg-gray-700 border border-gray-700 flex justify-start items-center" 
@@ -29,7 +32,7 @@ const RightSidebar = () => {
               <span>Start Project</span>
             </Button>
           </DialogTrigger>
-          <ProjectDialog />
+          <ProjectDialog onComplete={() => setProjectDialogOpen(false)} />
         </Dialog>
         
         <Button 
@@ -42,7 +45,7 @@ const RightSidebar = () => {
           <span>Publish Paper</span>
         </Button>
         
-        <Dialog>
+        <Dialog open={storyDialogOpen} onOpenChange={setStoryDialogOpen}>
           <DialogTrigger asChild>
             <Button 
               className="w-full bg-gray-800 hover:bg-gray-700 border border-gray-700 flex justify-start items-center" 
@@ -54,10 +57,10 @@ const RightSidebar = () => {
               <span>Write Story</span>
             </Button>
           </DialogTrigger>
-          <StoryDialog />
+          <StoryDialog onComplete={() => setStoryDialogOpen(false)} />
         </Dialog>
         
-        <Dialog>
+        <Dialog open={postDialogOpen} onOpenChange={setPostDialogOpen}>
           <DialogTrigger asChild>
             <Button 
               className="w-full mt-auto bg-teal-700 hover:bg-teal-600 text-white"
@@ -65,7 +68,7 @@ const RightSidebar = () => {
               POST
             </Button>
           </DialogTrigger>
-          <PostDialog />
+          <PostDialog onComplete={() => setPostDialogOpen(false)} />
         </Dialog>
       </div>
     </div>

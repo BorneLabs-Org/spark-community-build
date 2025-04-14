@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAppContext } from '@/context/app';
+import { useAuth } from '@/hooks/use-auth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -10,11 +10,11 @@ import { useToast } from '@/hooks/use-toast';
 const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { setIsLoggedIn, setCurrentUser } = useAppContext();
+  const { signIn, loading } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
   
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!email || !password) {
@@ -26,23 +26,7 @@ const SignIn = () => {
       return;
     }
     
-    // For the demo, we'll just simulate a successful login
-    // In a real app, you would validate against a backend
-    setIsLoggedIn(true);
-    setCurrentUser({
-      id: "user-1",
-      name: "Brian Mutune",
-      username: "brianmutune",
-      avatar: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?q=80&w=100&auto=format&fit=crop",
-      followers: 500
-    });
-    
-    toast({
-      title: "Signed in successfully",
-      description: "Welcome back!"
-    });
-    
-    navigate('/');
+    await signIn(email, password);
   };
   
   return (
@@ -87,8 +71,12 @@ const SignIn = () => {
               />
             </div>
             
-            <Button type="submit" className="w-full bg-branding-blue hover:bg-blue-700">
-              Sign In
+            <Button 
+              type="submit" 
+              className="w-full bg-branding-blue hover:bg-blue-700"
+              disabled={loading}
+            >
+              {loading ? 'Signing in...' : 'Sign In'}
             </Button>
           </form>
           

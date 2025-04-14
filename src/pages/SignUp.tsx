@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAppContext } from '@/context/app';
+import { Link } from 'react-router-dom';
+import { useAuth } from '@/hooks/use-auth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,11 +12,10 @@ const SignUp = () => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const { setIsLoggedIn, setCurrentUser } = useAppContext();
+  const { signUp, loading } = useAuth();
   const { toast } = useToast();
-  const navigate = useNavigate();
   
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!name || !email || !username || !password) {
@@ -28,23 +27,16 @@ const SignUp = () => {
       return;
     }
     
-    // For the demo, we'll just simulate a successful registration
-    // In a real app, you would create an account on the backend
-    setIsLoggedIn(true);
-    setCurrentUser({
-      id: "user-1",
-      name,
-      username,
-      avatar: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?q=80&w=100&auto=format&fit=crop",
-      followers: 0
-    });
+    if (password.length < 6) {
+      toast({
+        title: "Password too short",
+        description: "Password must be at least 6 characters long",
+        variant: "destructive"
+      });
+      return;
+    }
     
-    toast({
-      title: "Account created",
-      description: "Your account has been successfully created"
-    });
-    
-    navigate('/');
+    await signUp(email, password, username, name);
   };
   
   return (
@@ -102,10 +94,15 @@ const SignUp = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 className="bg-[#222] border-gray-700"
               />
+              <p className="text-xs text-gray-400">Password must be at least 6 characters</p>
             </div>
             
-            <Button type="submit" className="w-full bg-branding-blue hover:bg-blue-700">
-              Create Account
+            <Button 
+              type="submit" 
+              className="w-full bg-branding-blue hover:bg-blue-700"
+              disabled={loading}
+            >
+              {loading ? 'Creating Account...' : 'Create Account'}
             </Button>
           </form>
           

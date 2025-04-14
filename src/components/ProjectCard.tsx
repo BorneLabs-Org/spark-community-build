@@ -9,8 +9,8 @@ interface ProjectCardProps {
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   return (
-    <div className="relative w-full max-w-xs">
-      <div className="relative bg-[#121212] rounded-md overflow-hidden group cursor-pointer">
+    <div className="relative w-full h-full px-2">
+      <div className="relative bg-[#121212] rounded-md overflow-hidden group cursor-pointer h-full">
         <div className="aspect-square overflow-hidden">
           <img 
             src={project.image} 

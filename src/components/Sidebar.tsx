@@ -1,10 +1,11 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Home, Users, BeakerIcon, BookOpen, FileText, Save, HelpCircle, FileSearch } from 'lucide-react';
 
 const Sidebar = () => {
   return (
-    <aside className="w-56 bg-[#0a0a0a] border-r border-gray-800 h-screen flex flex-col">
+    <aside className="w-56 bg-[#0a0a0a] border-r border-gray-800 h-full flex flex-col">
       <div className="flex-1 overflow-y-auto py-4">
         <ul className="space-y-2 px-2">
           <li>

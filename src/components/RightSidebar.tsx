@@ -17,7 +17,7 @@ const RightSidebar = () => {
   if (!isLoggedIn) return null;
   
   return (
-    <div className="w-64 bg-[#0a0a0a] border-l border-gray-800 h-screen flex flex-col">
+    <div className="w-64 bg-[#0a0a0a] border-l border-gray-800 h-full flex flex-col">
       <div className="p-4 space-y-4">
         <Dialog>
           <DialogTrigger asChild>

@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { useAppContext } from '@/context/app';
 import Navbar from '@/components/Navbar';
 import Sidebar from '@/components/Sidebar';
@@ -7,18 +7,30 @@ import RightSidebar from '@/components/RightSidebar';
 import ProjectCard from '@/components/ProjectCard';
 import PostCard from '@/components/PostCard';
 import StoryCard from '@/components/StoryCard';
-import { ChevronRight, Filter } from 'lucide-react';
+import { ChevronRight, Filter, ChevronLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { 
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious
+} from '@/components/ui/carousel';
 
 const Index = () => {
   const { projects, posts, stories, isLoggedIn } = useAppContext();
+  const projectsRef = useRef<HTMLDivElement>(null);
   
   return (
     <div className="min-h-screen bg-[#121212] flex flex-col">
-      <Navbar />
+      <div className="sticky top-0 z-50">
+        <Navbar />
+      </div>
       
       <div className="flex flex-1 overflow-hidden">
-        <Sidebar />
+        <div className="sticky top-0 h-screen">
+          <Sidebar />
+        </div>
         
         <main className="flex-1 overflow-y-auto py-6 px-8">
           <div className="mb-10">
@@ -32,14 +44,18 @@ const Index = () => {
               </button>
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {projects.map(project => (
-                <ProjectCard key={project.id} project={project} />
-              ))}
-              
-              <Link to="/projects" className="flex items-center justify-center text-gray-400 hover:text-white">
-                <ChevronRight size={24} />
-              </Link>
+            <div className="relative" ref={projectsRef}>
+              <Carousel>
+                <CarouselContent>
+                  {projects.map(project => (
+                    <CarouselItem key={project.id} className="basis-1/4 lg:basis-1/4 md:basis-1/3 sm:basis-1/2">
+                      <ProjectCard project={project} />
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="absolute left-0 top-1/2 -translate-y-1/2 bg-[#222]/70 hover:bg-[#333]/90" />
+                <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2 bg-[#222]/70 hover:bg-[#333]/90" />
+              </Carousel>
             </div>
           </div>
           
@@ -51,8 +67,8 @@ const Index = () => {
               </div>
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {posts.map(post => (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+              {posts.slice(0, 20).map(post => (
                 <PostCard key={post.id} post={post} />
               ))}
               
@@ -82,7 +98,11 @@ const Index = () => {
           </div>
         </main>
         
-        {isLoggedIn && <RightSidebar />}
+        {isLoggedIn && (
+          <div className="sticky top-0 h-screen">
+            <RightSidebar />
+          </div>
+        )}
       </div>
     </div>
   );

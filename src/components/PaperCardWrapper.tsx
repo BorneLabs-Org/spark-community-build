@@ -15,8 +15,8 @@ const PaperCardWrapper: React.FC<PaperCardWrapperProps> = ({ paper }) => {
     console.log('Downloading paper:', paper.title);
     
     // If paper has a download URL, open it
-    if (paper.url) {
-      window.open(paper.url, '_blank');
+    if (paper.fileUrl) {
+      window.open(paper.fileUrl, '_blank');
     }
   };
   

@@ -8,12 +8,14 @@ const defaultContext: AppContextType = {
   projects: [],
   posts: [],
   stories: [],
+  papers: [],
   isLoggedIn: false,
   setIsLoggedIn: () => {},
   setCurrentUser: () => {},
   addProject: () => {},
   addPost: () => {},
   addStory: () => {},
+  addPaper: () => {}
 };
 
 // Create the context

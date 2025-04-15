@@ -11,4 +11,7 @@ export interface AppContextType {
   stories: Story[];
   papers: Paper[];
   addPaper: (paper: Paper) => void;
+  addProject: (project: Project) => void;
+  addPost: (post: Post) => void;
+  addStory: (story: Story) => void;
 }

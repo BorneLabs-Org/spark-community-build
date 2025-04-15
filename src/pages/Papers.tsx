@@ -23,13 +23,13 @@ const Papers = () => {
       </div>
       
       <div className="flex flex-1 pt-[60px]">
-        {/* Left Sidebar - hidden on mobile */}
-        <div className="hidden md:block fixed top-[60px] bottom-0 left-0 w-56 overflow-y-auto">
+        {/* Left Sidebar */}
+        <div className="fixed top-[60px] bottom-0 left-0 w-56 overflow-y-auto z-10">
           <Sidebar />
         </div>
         
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto py-6 px-4 md:px-8 md:ml-56 md:mr-64 w-full">
+        <main className="flex-1 overflow-y-auto py-6 px-4 md:px-8 ml-56 mr-0 md:mr-64">
           <div className="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
               <h1 className="text-2xl font-bold text-white mb-2">Papers</h1>
@@ -70,7 +70,7 @@ const Papers = () => {
           )}
         </main>
         
-        {/* Right Sidebar - hidden on mobile */}
+        {/* Right Sidebar */}
         {isLoggedIn && (
           <div className="hidden md:block fixed top-[60px] bottom-0 right-0 w-64 overflow-y-auto">
             <RightSidebar />

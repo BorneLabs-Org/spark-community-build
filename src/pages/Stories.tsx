@@ -16,9 +16,11 @@ const Stories = () => {
       <Navbar />
       
       <div className="flex flex-1 overflow-hidden">
-        <Sidebar />
+        <div className="fixed top-16 left-0 bottom-0 w-56 z-10">
+          <Sidebar />
+        </div>
         
-        <main className="flex-1 overflow-y-auto py-6 px-8">
+        <main className="flex-1 overflow-y-auto py-6 px-8 ml-56 mr-0 md:mr-64">
           <div className="mb-8">
             <div className="flex justify-between items-center mb-6">
               <div className="flex items-center">
@@ -56,7 +58,11 @@ const Stories = () => {
           </div>
         </main>
         
-        {isLoggedIn && <RightSidebar />}
+        {isLoggedIn && (
+          <div className="hidden md:block fixed top-16 right-0 bottom-0 w-64">
+            <RightSidebar />
+          </div>
+        )}
       </div>
     </div>
   );

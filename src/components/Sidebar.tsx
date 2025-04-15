@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Home, Users, BookOpen, FileText, Save, HelpCircle, Upload } from 'lucide-react';
+import { Home, Users, BookOpen, FileText, Save, HelpCircle } from 'lucide-react';
 
 const Sidebar = () => {
   return (
@@ -39,12 +39,6 @@ const Sidebar = () => {
             </Link>
           </li>
           <li>
-            <Link to="/publish-paper" className="flex items-center p-2 rounded-lg hover:bg-gray-800 text-white">
-              <Upload className="w-5 h-5 mr-2" />
-              <span>Publish a Paper</span>
-            </Link>
-          </li>
-          <li>
             <Link to="/saves" className="flex items-center p-2 rounded-lg hover:bg-gray-800 text-white">
               <Save className="w-5 h-5 mr-2" />
               <span>Saves</span>
@@ -60,40 +54,40 @@ const Sidebar = () => {
         </Link>
         
         <div className="flex flex-wrap gap-2 text-xs">
-          <Link to="/what-is-bornelabs" className="bg-[#222] px-2 py-1 rounded hover:bg-gray-700">
+          <Link to="/what-is-bornelabs" className="bg-transparent px-2 py-1 rounded hover:bg-gray-700">
             What is Bornelabs
           </Link>
-          <Link to="/project-id" className="bg-[#222] px-2 py-1 rounded hover:bg-gray-700">
+          <Link to="/project-id" className="bg-transparent px-2 py-1 rounded hover:bg-gray-700">
             Project ID
           </Link>
-          <Link to="/how-to-start-project" className="bg-[#222] px-2 py-1 rounded hover:bg-gray-700">
+          <Link to="/how-to-start-project" className="bg-transparent px-2 py-1 rounded hover:bg-gray-700">
             How to start a project
           </Link>
-          <Link to="/stories" className="bg-[#222] px-2 py-1 rounded hover:bg-gray-700">
+          <Link to="/stories" className="bg-transparent px-2 py-1 rounded hover:bg-gray-700">
             Stories
           </Link>
-          <Link to="/iae" className="bg-[#222] px-2 py-1 rounded hover:bg-gray-700">
+          <Link to="/iae" className="bg-transparent px-2 py-1 rounded hover:bg-gray-700">
             IAE
           </Link>
-          <Link to="/sas" className="bg-[#222] px-2 py-1 rounded hover:bg-gray-700">
+          <Link to="/sas" className="bg-transparent px-2 py-1 rounded hover:bg-gray-700">
             SAS
           </Link>
-          <Link to="/faq" className="bg-[#222] px-2 py-1 rounded hover:bg-gray-700">
+          <Link to="/faq" className="bg-transparent px-2 py-1 rounded hover:bg-gray-700">
             FAQ
           </Link>
-          <Link to="/papers" className="bg-[#222] px-2 py-1 rounded hover:bg-gray-700">
+          <Link to="/papers" className="bg-transparent px-2 py-1 rounded hover:bg-gray-700">
             Papers
           </Link>
-          <Link to="/how-to-publish-paper" className="bg-[#222] px-2 py-1 rounded hover:bg-gray-700">
+          <Link to="/how-to-publish-paper" className="bg-transparent px-2 py-1 rounded hover:bg-gray-700">
             How to publish a paper
           </Link>
-          <Link to="/requests" className="bg-[#222] px-2 py-1 rounded hover:bg-gray-700">
+          <Link to="/requests" className="bg-transparent px-2 py-1 rounded hover:bg-gray-700">
             Requests
           </Link>
-          <Link to="/community-page" className="bg-[#222] px-2 py-1 rounded hover:bg-gray-700">
+          <Link to="/community-page" className="bg-transparent px-2 py-1 rounded hover:bg-gray-700">
             Community Page
           </Link>
-          <Link to="/lab" className="bg-[#222] px-2 py-1 rounded hover:bg-gray-700">
+          <Link to="/lab" className="bg-transparent px-2 py-1 rounded hover:bg-gray-700">
             Lab
           </Link>
         </div>

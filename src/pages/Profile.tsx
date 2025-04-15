@@ -56,12 +56,12 @@ const Profile = () => {
       
       <div className="flex flex-1 pt-[60px]">
         {/* Left Sidebar - hidden on mobile */}
-        <div className="hidden md:block fixed top-[60px] bottom-0 left-0 w-56 overflow-y-auto">
+        <div className="fixed top-[60px] bottom-0 left-0 w-56 overflow-y-auto">
           <Sidebar />
         </div>
         
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto py-6 px-4 md:px-8 md:ml-56 md:mr-64 w-full">
+        <main className="flex-1 overflow-y-auto py-6 px-4 md:px-8 ml-56 mr-0 md:mr-64">
           <div className="max-w-4xl mx-auto">
             {/* Profile Header */}
             <div className="bg-[#1a1a1a] rounded-lg p-6 mb-6">

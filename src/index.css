@@ -34,10 +34,20 @@
     --ring: 222.2 84% 4.9%;
 
     --radius: 0.5rem;
+    
+    /* Bornelabs specific variables */
+    --bornelabs-amber: 39 100% 50%;
+    --bornelabs-blue: 189 68% 57%;
+    --search-pid-orange: 24 94% 53%;
   }
 
   body {
     @apply bg-[#121212] text-white;
+  }
+  
+  /* Dropdown styling for profile menu */
+  [data-radix-popper-content-wrapper] {
+    @apply bg-[#191919] border border-gray-700 rounded-md shadow-lg;
   }
 }
 
@@ -58,4 +68,23 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
+}
+
+/* PID search glow effect */
+.pid-search-active {
+  box-shadow: 0 0 10px 2px rgba(249, 115, 22, 0.5);
+}
+
+/* Bornelabs specific classes */
+.text-bornelabs-amber {
+  color: hsl(var(--bornelabs-amber));
+}
+
+.text-bornelabs-blue {
+  color: hsl(var(--bornelabs-blue));
+}
+
+/* Download button styles */
+.paper-download-btn {
+  @apply text-bornelabs-amber hover:text-white transition-colors duration-200;
 }

@@ -1,4 +1,3 @@
-
 import { useState, useEffect, createContext, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User, Session } from '@supabase/supabase-js';
@@ -36,13 +35,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setUser(session.user);
         
         // Get user profile from the database
-        const { data: userData } = await supabase
+        const { data: userData, error } = await supabase
           .from('users')
           .select('*')
           .eq('id', session.user.id)
           .single();
         
-        if (userData) {
+        if (userData && !error) {
           setCurrentUser({
             id: userData.id,
             name: userData.name,
@@ -61,28 +60,31 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
         
         if (event === 'SIGNED_IN' && session) {
-          // Get user profile from the database
-          const { data: userData } = await supabase
-            .from('users')
-            .select('*')
-            .eq('id', session.user.id)
-            .single();
-          
-          if (userData) {
-            setCurrentUser({
-              id: userData.id,
-              name: userData.name,
-              username: userData.username,
-              avatar: userData.avatar_url || 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?q=80&w=100&auto=format&fit=crop',
-              followers: 0
-            });
-            setIsLoggedIn(true);
-          }
+          // Use setTimeout to prevent potential deadlocks with Supabase
+          setTimeout(async () => {
+            // Get user profile from the database
+            const { data: userData, error } = await supabase
+              .from('users')
+              .select('*')
+              .eq('id', session.user.id)
+              .single();
+            
+            if (userData && !error) {
+              setCurrentUser({
+                id: userData.id,
+                name: userData.name,
+                username: userData.username,
+                avatar: userData.avatar_url || 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?q=80&w=100&auto=format&fit=crop',
+                followers: 0
+              });
+              setIsLoggedIn(true);
+            }
+          }, 0);
         } else if (event === 'SIGNED_OUT') {
           setCurrentUser(null);
           setIsLoggedIn(false);
@@ -100,7 +102,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setLoading(true);
       
       // Check if username already exists
-      const { data: usernameCheck } = await supabase
+      const { data: usernameCheck, error: usernameError } = await supabase
         .from('users')
         .select('username')
         .eq('username', username)
@@ -131,18 +133,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (error) throw error;
       
       if (data.user) {
-        // Create user profile in the database
-        const { error: profileError } = await supabase
-          .from('users')
-          .insert({
-            id: data.user.id,
-            email,
-            username,
-            name,
-            avatar_url: null
-          });
-        
-        if (profileError) throw profileError;
+        // In Supabase, we'll create a trigger to handle user creation
+        // We don't need to manually insert into the users table anymore
         
         toast({
           title: "Account created",

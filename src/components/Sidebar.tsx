@@ -1,45 +1,51 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Home, Users, BookOpen, FileText, Save, HelpCircle } from 'lucide-react';
 
 const Sidebar = () => {
+  const location = useLocation();
+  
+  const isActive = (path: string) => {
+    return location.pathname === path;
+  };
+  
   return (
     <aside className="w-56 bg-[#0a0a0a] border-r border-gray-800 h-full flex flex-col">
       <div className="flex-1 overflow-y-auto py-4">
         <ul className="space-y-2 px-2">
           <li>
-            <Link to="/" className="flex items-center p-2 rounded-lg hover:bg-gray-800 text-white">
+            <Link to="/" className={`flex items-center p-2 rounded-lg hover:bg-gray-800 text-white ${isActive('/') ? 'bg-gray-800' : 'bg-transparent'}`}>
               <Home className="w-5 h-5 mr-2" />
               <span>Home</span>
             </Link>
           </li>
           <li>
-            <Link to="/community" className="flex items-center p-2 rounded-lg hover:bg-gray-800 text-white">
+            <Link to="/community" className={`flex items-center p-2 rounded-lg hover:bg-gray-800 text-white ${isActive('/community') ? 'bg-gray-800' : 'bg-transparent'}`}>
               <Users className="w-5 h-5 mr-2" />
               <span>Community page</span>
             </Link>
           </li>
           <li>
-            <Link to="/lab" className="flex items-center p-2 rounded-lg hover:bg-gray-800 text-white">
+            <Link to="/lab" className={`flex items-center p-2 rounded-lg hover:bg-gray-800 text-white ${isActive('/lab') ? 'bg-gray-800' : 'bg-transparent'}`}>
               <BookOpen className="w-5 h-5 mr-2" />
               <span>Lab</span>
             </Link>
           </li>
           <li>
-            <Link to="/stories" className="flex items-center p-2 rounded-lg hover:bg-gray-800 text-white">
+            <Link to="/stories" className={`flex items-center p-2 rounded-lg hover:bg-gray-800 text-white ${isActive('/stories') ? 'bg-gray-800' : 'bg-transparent'}`}>
               <BookOpen className="w-5 h-5 mr-2" />
               <span>Stories</span>
             </Link>
           </li>
           <li>
-            <Link to="/papers" className="flex items-center p-2 rounded-lg hover:bg-gray-800 text-white">
+            <Link to="/papers" className={`flex items-center p-2 rounded-lg hover:bg-gray-800 text-white ${isActive('/papers') ? 'bg-gray-800' : 'bg-transparent'}`}>
               <FileText className="w-5 h-5 mr-2" />
               <span>Papers</span>
             </Link>
           </li>
           <li>
-            <Link to="/saves" className="flex items-center p-2 rounded-lg hover:bg-gray-800 text-white">
+            <Link to="/saves" className={`flex items-center p-2 rounded-lg hover:bg-gray-800 text-white ${isActive('/saves') ? 'bg-gray-800' : 'bg-transparent'}`}>
               <Save className="w-5 h-5 mr-2" />
               <span>Saves</span>
             </Link>

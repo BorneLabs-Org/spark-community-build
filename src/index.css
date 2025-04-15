@@ -88,3 +88,17 @@
 .paper-download-btn {
   @apply text-bornelabs-amber hover:text-white transition-colors duration-200;
 }
+
+/* Dark theme for dropdowns */
+.radix-dropdown-content,
+[data-radix-popper-content-wrapper] {
+  @apply bg-[#191919] border border-gray-700 rounded-md shadow-lg !important;
+}
+
+.radix-dropdown-item {
+  @apply text-white hover:bg-gray-700 !important;
+}
+
+.radix-dropdown-separator {
+  @apply bg-gray-700 !important;
+}

@@ -27,7 +27,7 @@ const PaperCardWrapper: React.FC<PaperCardWrapperProps> = ({ paper }) => {
         className="absolute top-2 right-2 z-10 bg-[rgba(0,0,0,0.5)] hover:bg-[rgba(0,0,0,0.7)] rounded-full p-2"
         size="icon"
       >
-        <ArrowDown className="text-[#FFA500] h-5 w-5" />
+        <ArrowDown className="text-[#33C3F0] h-5 w-5" />
       </Button>
       
       <PaperCard paper={paper} />

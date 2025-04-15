@@ -30,7 +30,7 @@ const RightSidebar = () => {
         <Dialog open={projectDialogOpen} onOpenChange={setProjectDialogOpen}>
           <DialogTrigger asChild>
             <Button 
-              className="w-full bg-gray-800 hover:bg-gray-700 border border-gray-700 flex justify-start items-center" 
+              className="w-full bg-transparent hover:bg-gray-700 border border-gray-700 flex justify-start items-center" 
               variant="outline"
             >
               <div className="p-1 mr-2 bg-gray-700 rounded">📦</div>
@@ -43,7 +43,7 @@ const RightSidebar = () => {
         <Dialog open={paperDialogOpen} onOpenChange={setPaperDialogOpen}>
           <DialogTrigger asChild>
             <Button 
-              className="w-full bg-gray-800 hover:bg-gray-700 border border-gray-700 flex justify-start items-center" 
+              className="w-full bg-transparent hover:bg-gray-700 border border-gray-700 flex justify-start items-center" 
               variant="outline"
             >
               <div className="p-1 mr-2 bg-gray-700 rounded">
@@ -58,7 +58,7 @@ const RightSidebar = () => {
         <Dialog open={storyDialogOpen} onOpenChange={setStoryDialogOpen}>
           <DialogTrigger asChild>
             <Button 
-              className="w-full bg-gray-800 hover:bg-gray-700 border border-gray-700 flex justify-start items-center" 
+              className="w-full bg-transparent hover:bg-gray-700 border border-gray-700 flex justify-start items-center" 
               variant="outline"
             >
               <div className="p-1 mr-2 bg-gray-700 rounded">
@@ -94,7 +94,7 @@ const RightSidebar = () => {
               <Menu className="h-6 w-6" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="right" className="p-0 w-[260px]">
+          <SheetContent side="right" className="p-0 w-[260px] bg-[#0a0a0a] border-gray-800">
             <SidebarContent />
           </SheetContent>
         </Sheet>

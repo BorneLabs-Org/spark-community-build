@@ -1,44 +1,41 @@
 
 import React, { useState } from 'react';
 import { AppContext } from './context';
-import { initialProjects, initialPosts, initialStories } from './initialData';
-import { User, Project, Post, Story } from '../../types';
+import { users, projects, posts, stories, papers } from './initialData';
+import { User, Paper } from '@/types';
 
-interface AppProviderProps {
-  children: React.ReactNode;
-}
-
-export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
+export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [projects, setProjects] = useState<Project[]>(initialProjects);
-  const [posts, setPosts] = useState<Post[]>(initialPosts);
-  const [stories, setStories] = useState<Story[]>(initialStories);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [papersList, setPapersList] = useState<Paper[]>(papers);
   
-  const addProject = (project: Project) => {
-    setProjects(prev => [project, ...prev]);
+  const addPaper = (paper: Paper) => {
+    setPapersList(prevPapers => [paper, ...prevPapers]);
   };
   
-  const addPost = (post: Post) => {
-    setPosts(prev => [post, ...prev]);
-  };
+  // Initialize the context with sample data if the user is not logged in
+  React.useEffect(() => {
+    if (!isLoggedIn && users.length > 0) {
+      setCurrentUser(users[0]);
+      setIsLoggedIn(true);
+    }
+  }, [isLoggedIn]);
   
-  const addStory = (story: Story) => {
-    setStories(prev => [story, ...prev]);
-  };
-  
-  const value = {
-    currentUser,
-    projects,
-    posts,
-    stories,
-    isLoggedIn,
-    setIsLoggedIn,
-    setCurrentUser,
-    addProject,
-    addPost,
-    addStory,
-  };
-  
-  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
+  return (
+    <AppContext.Provider
+      value={{
+        currentUser,
+        isLoggedIn,
+        setIsLoggedIn,
+        setCurrentUser,
+        projects,
+        posts,
+        stories,
+        papers: papersList,
+        addPaper,
+      }}
+    >
+      {children}
+    </AppContext.Provider>
+  );
 };

@@ -26,6 +26,11 @@ const Navbar = () => {
     <nav className="bg-[#121212] border-b border-gray-800 px-4 py-2 flex items-center justify-between">
       <div className="flex items-center">
         <Link to="/" className="flex items-center">
+          <img 
+            src="/lovable-uploads/272adb19-93cc-4c1c-b43d-970192a08d48.png" 
+            alt="Logo" 
+            className="h-10 w-10 mr-2" 
+          />
           <div className="text-branding-blue font-bold text-2xl mr-1">Borne</div>
           <div className="text-branding-amber font-bold text-2xl">labs</div>
         </Link>

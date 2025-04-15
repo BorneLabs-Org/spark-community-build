@@ -7,6 +7,7 @@ import RightSidebar from '@/components/RightSidebar';
 import ProjectCard from '@/components/ProjectCard';
 import PostCard from '@/components/PostCard';
 import StoryCard from '@/components/StoryCard';
+import PaperCard from '@/components/PaperCard';
 import { ChevronRight, Filter } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { 
@@ -19,7 +20,7 @@ import {
 import { useIsMobile } from '@/hooks/use-mobile';
 
 const Index = () => {
-  const { projects, posts, stories, isLoggedIn } = useAppContext();
+  const { projects, posts, stories, papers = [], isLoggedIn } = useAppContext();
   const projectsRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
   
@@ -82,7 +83,7 @@ const Index = () => {
             </div>
           </div>
           
-          <div>
+          <div className="mb-10">
             <div className="flex justify-between items-center mb-4">
               <div className="flex items-center">
                 <div className="text-branding-amber mr-2">📚</div>
@@ -96,6 +97,28 @@ const Index = () => {
               ))}
               
               <Link to="/stories" className="flex items-center justify-center text-gray-400 hover:text-white">
+                <ChevronRight size={24} />
+              </Link>
+            </div>
+          </div>
+          
+          <div>
+            <div className="flex justify-between items-center mb-4">
+              <div className="flex items-center">
+                <div className="text-branding-amber mr-2">📄</div>
+                <h2 className="text-xl font-bold text-white">Papers</h2>
+              </div>
+              <Link to="/papers" className="text-sm text-branding-blue hover:underline">
+                View all
+              </Link>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {papers.slice(0, 4).map(paper => (
+                <PaperCard key={paper.id} paper={paper} variant="vertical" />
+              ))}
+              
+              <Link to="/papers" className="flex items-center justify-center text-gray-400 hover:text-white">
                 <ChevronRight size={24} />
               </Link>
             </div>

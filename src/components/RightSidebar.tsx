@@ -4,7 +4,8 @@ import { useAppContext } from '@/context/app';
 import { ProjectDialog } from './ProjectDialog';
 import { PostDialog } from './PostDialog';
 import { StoryDialog } from './StoryDialog';
-import { FileText, BookOpen, Menu } from 'lucide-react';
+import PaperDialog from './PaperDialog';
+import { FileText, BookOpen, Menu, Upload } from 'lucide-react';
 import { 
   Dialog,
   DialogTrigger,
@@ -18,6 +19,7 @@ const RightSidebar = () => {
   const [projectDialogOpen, setProjectDialogOpen] = useState(false);
   const [storyDialogOpen, setStoryDialogOpen] = useState(false);
   const [postDialogOpen, setPostDialogOpen] = useState(false);
+  const [paperDialogOpen, setPaperDialogOpen] = useState(false);
   const isMobile = useIsMobile();
   
   if (!isLoggedIn) return null;
@@ -35,19 +37,23 @@ const RightSidebar = () => {
               <span>Start Project</span>
             </Button>
           </DialogTrigger>
-          {/* Removing the onComplete prop since ProjectDialog doesn't support it */}
           <ProjectDialog />
         </Dialog>
         
-        <Button 
-          className="w-full bg-gray-800 hover:bg-gray-700 border border-gray-700 flex justify-start items-center" 
-          variant="outline"
-        >
-          <div className="p-1 mr-2 bg-gray-700 rounded">
-            <FileText size={16} />
-          </div>
-          <span>Publish Paper</span>
-        </Button>
+        <Dialog open={paperDialogOpen} onOpenChange={setPaperDialogOpen}>
+          <DialogTrigger asChild>
+            <Button 
+              className="w-full bg-gray-800 hover:bg-gray-700 border border-gray-700 flex justify-start items-center" 
+              variant="outline"
+            >
+              <div className="p-1 mr-2 bg-gray-700 rounded">
+                <FileText size={16} />
+              </div>
+              <span>Publish Paper</span>
+            </Button>
+          </DialogTrigger>
+          <PaperDialog onComplete={() => setPaperDialogOpen(false)} />
+        </Dialog>
         
         <Dialog open={storyDialogOpen} onOpenChange={setStoryDialogOpen}>
           <DialogTrigger asChild>

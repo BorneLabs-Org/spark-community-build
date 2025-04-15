@@ -1,190 +1,233 @@
 
-import { Project, Post, Story } from '../../types';
+import { User, Project, Post, Story, Paper } from '@/types';
 
-// Initial projects data
-export const initialProjects: Project[] = [
+// Placeholder avatar URLs
+const avatarUrls = [
+  "https://github.com/shadcn.png",
+  "https://api.dicebear.com/7.x/personas/svg?seed=Felix",
+  "https://api.dicebear.com/7.x/personas/svg?seed=John",
+  "https://api.dicebear.com/7.x/personas/svg?seed=Zoe",
+];
+
+// Sample users
+export const users: User[] = [
   {
     id: "1",
-    name: "Tab Killer",
-    description: "A browser extension that helps manage your tabs",
-    image: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7",
-    user: {
-      id: "1",
-      name: "John Doe",
-      username: "johndoe",
-      avatar: "https://images.unsplash.com/photo-1618077360395-f3068be8e001?q=80&w=100&auto=format&fit=crop",
-      followers: 210
-    },
-    sasLevel: "SAS.6"
+    name: "John Doe",
+    username: "johndoe",
+    avatar: avatarUrls[0],
+    followers: 120,
   },
   {
     id: "2",
-    name: "Grid Forum",
-    description: "An open-source platform for AI models to collaborate",
-    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158",
-    user: {
-      id: "2",
-      name: "Jane Smith",
-      username: "janesmith",
-      avatar: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=100&auto=format&fit=crop",
-      followers: 345
-    },
-    sasLevel: "SAS.1"
+    name: "Jane Smith",
+    username: "janesmith",
+    avatar: avatarUrls[1],
+    followers: 85,
   },
   {
     id: "3",
-    name: "Cognito",
-    description: "AI-powered cognitive enhancement tools",
-    image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5",
-    user: {
-      id: "3",
-      name: "Alex Johnson",
-      username: "alexj",
-      avatar: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?q=80&w=100&auto=format&fit=crop",
-      followers: 512
-    },
-    sasLevel: "SAS.4"
+    name: "Alice Johnson",
+    username: "alicej",
+    avatar: avatarUrls[2],
+    followers: 42,
   },
   {
     id: "4",
-    name: "KSA",
-    description: "Knowledge sharing application",
-    image: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7",
-    user: {
-      id: "4",
-      name: "Sam Wilson",
-      username: "samwilson",
-      avatar: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=100&auto=format&fit=crop",
-      followers: 178
-    },
-    sasLevel: "SAS.2"
-  }
+    name: "Bob Wilson",
+    username: "bobw",
+    avatar: avatarUrls[3],
+    followers: 67,
+  },
 ];
 
-// Initial posts data
-export const initialPosts: Post[] = [
+// Sample projects
+export const projects: Project[] = [
   {
     id: "1",
-    title: "Oxygen Eco-Tank",
-    description: "A sustainable oxygen tank for underwater exploration",
-    media: "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952",
-    mediaType: "image",
-    user: {
-      id: "5",
-      name: "Sarah Palmer",
-      username: "sarahp",
-      avatar: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=100&auto=format&fit=crop",
-      followers: 2100
-    },
-    views: 523,
-    createdAt: "2023-06-12T10:30:00Z"
+    name: "AI Image Generator",
+    description: "Generate unique images using state-of-the-art AI models",
+    image: "https://source.unsplash.com/random/800x600/?ai",
+    user: users[0],
+    bookmarked: true,
+    sasLevel: "Advanced",
   },
   {
     id: "2",
-    title: "Hydro Bike",
-    description: "A water-powered bicycle concept",
-    media: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81",
+    name: "Health Tracker App",
+    description: "Monitor your daily health metrics with a simple interface",
+    image: "https://source.unsplash.com/random/800x600/?health",
+    user: users[1],
+    bookmarked: false,
+    sasLevel: "Intermediate",
+  },
+  {
+    id: "3",
+    name: "Sustainable Energy Monitor",
+    description: "Track energy usage and carbon footprint in real-time",
+    image: "https://source.unsplash.com/random/800x600/?energy",
+    user: users[2],
+    bookmarked: false,
+    sasLevel: "Advanced",
+  },
+  {
+    id: "4",
+    name: "Social Media Analytics",
+    description: "Analyze engagement and reach across multiple platforms",
+    image: "https://source.unsplash.com/random/800x600/?social",
+    user: users[3],
+    bookmarked: true,
+    sasLevel: "Beginner",
+  },
+  {
+    id: "5",
+    name: "Smart Home Controller",
+    description: "Integrate and control all your smart home devices",
+    image: "https://source.unsplash.com/random/800x600/?smarthome",
+    user: users[0],
+    bookmarked: false,
+    sasLevel: "Intermediate",
+  },
+];
+
+// Sample posts
+export const posts: Post[] = [
+  {
+    id: "1",
+    title: "Launched our new AI platform",
+    description: "After months of development, our AI platform is now live!",
+    media: "https://source.unsplash.com/random/800x600/?launch",
     mediaType: "image",
-    user: {
-      id: "6",
-      name: "Faith Stereo",
-      username: "faithstereo",
-      avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=100&auto=format&fit=crop",
-      followers: 2000
-    },
+    user: users[0],
     views: 432,
-    createdAt: "2023-06-14T14:45:00Z"
-  },
-  {
-    id: "3",
-    title: "Need Help in aligning the",
-    description: "Technical assistance needed for alignment",
-    media: "https://images.unsplash.com/photo-1498050108023-c5249f4df085",
-    mediaType: "image",
-    user: {
-      id: "7",
-      name: "Rachel Forrest",
-      username: "rachelforrest",
-      avatar: "https://images.unsplash.com/photo-1607746882042-944635dfe10e?q=80&w=100&auto=format&fit=crop",
-      followers: 3700
-    },
-    views: 189,
-    createdAt: "2023-06-15T08:20:00Z"
-  },
-  {
-    id: "4",
-    title: "Syrs of modeling and this",
-    description: "Advances in 3D modeling techniques",
-    media: "https://images.unsplash.com/photo-1531297484001-80022131f5a1",
-    mediaType: "image",
-    user: {
-      id: "8",
-      name: "Skip Jay",
-      username: "skipjay",
-      avatar: "https://images.unsplash.com/photo-1528892952291-009c663ce843?q=80&w=100&auto=format&fit=crop",
-      followers: 2000
-    },
-    views: 302,
-    createdAt: "2023-06-16T12:30:00Z"
-  }
-];
-
-// Initial stories data
-export const initialStories: Story[] = [
-  {
-    id: "1",
-    title: "SAS.1 The Grid - A Forgotten project",
-    content: "Grid Forum is an open-source platform where AI models collaborate and share knowledge, enhancing their collective intelligence. It also includes features like Glink, a secure browser for efficient AI collaboration.",
-    user: {
-      id: "2",
-      name: "Jane Smith",
-      username: "janesmith",
-      avatar: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=100&auto=format&fit=crop",
-      followers: 345
-    },
-    project: initialProjects[1],
-    createdAt: "2023-05-10T09:30:00Z",
-    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"
+    createdAt: "2025-02-15T10:30:00Z",
   },
   {
     id: "2",
-    title: "Making of the Flux Pulse Motor",
-    content: "The JAE-1 Flux Pulse Motor is an experimental propulsion system designed to enhance thrust efficiency through controlled flux pulsing, optimizing energy conversion and minimizing losses, it aims to create more efficient and scalable propulsion technology for future applications.",
-    user: {
-      id: "9",
-      name: "Peter Maxwell",
-      username: "petermaxwell",
-      avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=100&auto=format&fit=crop",
-      followers: 1823
-    },
-    createdAt: "2023-05-15T14:20:00Z",
-    image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e"
+    title: "Health tracker reaching 1000 users",
+    description: "We're thrilled to announce our app has reached 1000 active users!",
+    media: "https://source.unsplash.com/random/800x600/?celebration",
+    mediaType: "image",
+    user: users[1],
+    views: 287,
+    createdAt: "2025-02-10T14:15:00Z",
   },
   {
     id: "3",
-    title: "Understanding Neural Network Architecture",
-    content: "Neural networks are the backbone of modern AI systems. In this deep dive, I explore how different architectures serve different purposes and how to select the right one for your application. From convolutional networks for image processing to recurrent networks for sequence data, each type has unique strengths.",
-    user: {
-      id: "3",
-      name: "Alex Johnson",
-      username: "alexj",
-      avatar: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?q=80&w=100&auto=format&fit=crop",
-      followers: 512
-    },
-    createdAt: "2023-05-20T11:15:00Z"
+    title: "New sustainable energy dashboard",
+    description: "Check out our new dashboard that helps visualize energy consumption.",
+    media: "https://source.unsplash.com/random/800x600/?dashboard",
+    mediaType: "image",
+    user: users[2],
+    views: 156,
+    createdAt: "2025-02-05T08:45:00Z",
   },
   {
     id: "4",
-    title: "The Future of Sustainable Tech",
-    content: "As we face increasing environmental challenges, the tech industry must adapt. I've been researching how companies can reduce their carbon footprint while still innovating. From energy-efficient hardware to carbon-neutral data centers, the solutions are out there - we just need to implement them at scale.",
-    user: {
-      id: "1",
-      name: "John Doe",
-      username: "johndoe",
-      avatar: "https://images.unsplash.com/photo-1618077360395-f3068be8e001?q=80&w=100&auto=format&fit=crop",
-      followers: 210
-    },
-    createdAt: "2023-05-25T16:40:00Z",
-    image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b"
-  }
+    title: "Social media analytics update",
+    description: "Our latest update brings real-time notifications and improved metrics.",
+    media: "https://source.unsplash.com/random/800x600/?update",
+    mediaType: "image",
+    user: users[3],
+    views: 321,
+    createdAt: "2025-01-30T16:20:00Z",
+  },
+  {
+    id: "5",
+    title: "Smart home integration demo",
+    description: "Watch this quick demo of how our smart home controller works.",
+    media: "https://source.unsplash.com/random/800x600/?smarthome",
+    mediaType: "video",
+    user: users[0],
+    views: 189,
+    createdAt: "2025-01-25T12:10:00Z",
+  },
+];
+
+// Sample stories
+export const stories: Story[] = [
+  {
+    id: "1",
+    title: "How We Built Our AI Image Generator",
+    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl ultricies nunc, vitae ultricies nisl nisl eget nisl. Nullam euismod, nisl eget aliquam ultricies, nunc nisl ultricies nunc, vitae ultricies nisl nisl eget nisl.",
+    user: users[0],
+    project: projects[0],
+    bookmarked: true,
+    createdAt: "2025-02-14T09:30:00Z",
+  },
+  {
+    id: "2",
+    title: "The Journey to 1000 Users",
+    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl ultricies nunc, vitae ultricies nisl nisl eget nisl. Nullam euismod, nisl eget aliquam ultricies, nunc nisl ultricies nunc, vitae ultricies nisl nisl eget nisl.",
+    user: users[1],
+    project: projects[1],
+    bookmarked: false,
+    createdAt: "2025-02-09T11:45:00Z",
+  },
+  {
+    id: "3",
+    title: "Sustainable Energy: Why It Matters",
+    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl ultricies nunc, vitae ultricies nisl nisl eget nisl. Nullam euismod, nisl eget aliquam ultricies, nunc nisl ultricies nunc, vitae ultricies nisl nisl eget nisl.",
+    user: users[2],
+    project: projects[2],
+    bookmarked: true,
+    createdAt: "2025-02-04T15:20:00Z",
+  },
+  {
+    id: "4",
+    title: "The Future of Social Media Analytics",
+    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl ultricies nunc, vitae ultricies nisl nisl eget nisl. Nullam euismod, nisl eget aliquam ultricies, nunc nisl ultricies nunc, vitae ultricies nisl nisl eget nisl.",
+    user: users[3],
+    project: projects[3],
+    bookmarked: false,
+    createdAt: "2025-01-29T13:10:00Z",
+  },
+];
+
+// Sample papers
+export const papers: Paper[] = [
+  {
+    id: "1",
+    title: "Advancements in Image Generation Algorithms",
+    description: "This paper explores the latest breakthroughs in AI-powered image generation algorithms.",
+    fileUrl: "https://example.com/papers/image-gen-algorithms.pdf",
+    fileType: "pdf",
+    coverImage: "https://source.unsplash.com/random/800x600/?algorithm",
+    user: users[0],
+    createdAt: "2025-02-10T14:30:00Z",
+    downloads: 78,
+  },
+  {
+    id: "2",
+    title: "Health Tracking Applications: A Survey",
+    description: "A comprehensive overview of health tracking applications and their impact on user wellness.",
+    fileUrl: "https://example.com/papers/health-tracking-survey.pdf",
+    fileType: "pdf",
+    coverImage: "https://source.unsplash.com/random/800x600/?health",
+    user: users[1],
+    createdAt: "2025-01-25T09:15:00Z",
+    downloads: 42,
+  },
+  {
+    id: "3",
+    title: "Sustainable Energy Consumption Patterns",
+    description: "Analysis of energy consumption patterns and their environmental impact.",
+    fileUrl: "https://example.com/papers/sustainable-energy.doc",
+    fileType: "doc",
+    coverImage: "https://source.unsplash.com/random/800x600/?energy",
+    user: users[2],
+    createdAt: "2025-01-15T11:45:00Z",
+    downloads: 63,
+  },
+  {
+    id: "4",
+    title: "The Evolution of Social Media Metrics",
+    description: "How social media metrics have evolved over the past decade and what it means for businesses.",
+    fileUrl: "https://example.com/papers/social-media-metrics.pdf",
+    fileType: "pdf",
+    coverImage: "https://source.unsplash.com/random/800x600/?metrics",
+    user: users[3],
+    createdAt: "2025-01-05T16:20:00Z",
+    downloads: 29,
+  },
 ];

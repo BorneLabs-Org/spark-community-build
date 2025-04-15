@@ -38,3 +38,15 @@ export interface Story {
   createdAt: string;
   image?: string;
 }
+
+export interface Paper {
+  id: string;
+  title: string;
+  description?: string;
+  fileUrl: string;
+  fileType: 'pdf' | 'doc' | 'docx' | 'image';
+  coverImage: string;
+  user: User;
+  createdAt: string;
+  downloads?: number;
+}

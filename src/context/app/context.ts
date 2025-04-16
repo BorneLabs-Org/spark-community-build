@@ -10,6 +10,7 @@ const defaultContext: AppContextType = {
   stories: [],
   papers: [],
   isLoggedIn: false,
+  isLoading: false, // Added the missing property
   setIsLoggedIn: () => {},
   setCurrentUser: () => {},
   addProject: () => {},

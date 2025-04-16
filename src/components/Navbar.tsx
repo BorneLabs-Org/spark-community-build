@@ -30,24 +30,29 @@ const Navbar = () => {
   };
   
   return (
-    <nav className="bg-[#121212] border-b border-gray-800 px-4 py-2 flex flex-col">
-      {/* First row with logo and profile */}
-      <div className="flex items-center justify-between w-full mb-2">
-        <Link to="/" className="flex items-center">
-          <img 
-            src="/lovable-uploads/272adb19-93cc-4c1c-b43d-970192a08d48.png" 
-            alt="Logo" 
-            className="h-10 w-10 mr-2" 
-          />
-          <div className="text-branding-blue font-bold text-2xl mr-1">Borne</div>
-          <div className="text-branding-amber font-bold text-2xl">labs</div>
-        </Link>
+    <nav className="bg-[#121212] border-b border-gray-800 px-4 py-2">
+      <div className="flex items-center justify-between w-full">
+        <div className="flex items-center">
+          <Link to="/" className="flex items-center mr-4">
+            <img 
+              src="/lovable-uploads/272adb19-93cc-4c1c-b43d-970192a08d48.png" 
+              alt="Logo" 
+              className="h-10 w-10 mr-2" 
+            />
+            <div className="text-branding-blue font-bold text-2xl mr-1">Borne</div>
+            <div className="text-branding-amber font-bold text-2xl">labs</div>
+          </Link>
+          
+          <div className="hidden sm:block flex-1 mx-4 max-w-xl w-full">
+            <SearchBar onSearch={handleSearch} />
+          </div>
+        </div>
         
         <div>
           {isLoggedIn && currentUser ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center gap-2">
+                <Button variant="ghost" className="flex items-center gap-2 hover:bg-[#191919]">
                   <img 
                     src={currentUser.avatar || "https://github.com/shadcn.png"} 
                     alt="User avatar" 
@@ -98,11 +103,9 @@ const Navbar = () => {
         </div>
       </div>
       
-      {/* Second row with search */}
-      <div className="w-full flex justify-center mb-1">
-        <div className="w-[90%]">
-          <SearchBar onSearch={handleSearch} />
-        </div>
+      {/* Mobile search bar */}
+      <div className="sm:hidden w-full mt-2">
+        <SearchBar onSearch={handleSearch} />
       </div>
     </nav>
   );

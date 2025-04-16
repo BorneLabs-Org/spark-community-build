@@ -102,3 +102,14 @@
 .radix-dropdown-separator {
   @apply bg-gray-700 !important;
 }
+
+/* Disabled link styling */
+.disabled-link {
+  @apply text-gray-500 cursor-not-allowed;
+}
+
+/* Responsive navbar */
+.navbar-container {
+  @apply flex flex-col md:flex-row w-full items-center justify-between;
+}
+

@@ -10,7 +10,7 @@ const Lab = () => {
       <Navbar />
       <div className="flex flex-1 overflow-hidden">
         <Sidebar />
-        <main className="flex-1 overflow-auto p-4">
+        <main className="flex-1 overflow-auto p-4 bg-[#121212]">
           <div className="flex flex-col items-center justify-center h-full">
             <img 
               src="/lovable-uploads/272adb19-93cc-4c1c-b43d-970192a08d48.png" 

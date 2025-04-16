@@ -10,6 +10,13 @@ const Sidebar = () => {
     return location.pathname === path;
   };
   
+  // List of disabled pages
+  const disabledPages = ['/community'];
+  
+  const isDisabled = (path: string) => {
+    return disabledPages.includes(path);
+  };
+  
   return (
     <aside className="w-56 bg-[#0a0a0a] border-r border-gray-800 h-full flex flex-col">
       <div className="flex-1 overflow-y-auto py-4">
@@ -21,10 +28,10 @@ const Sidebar = () => {
             </Link>
           </li>
           <li>
-            <Link to="/community" className={`flex items-center p-2 rounded-lg hover:bg-gray-800 text-white ${isActive('/community') ? 'bg-gray-800' : 'bg-transparent'}`}>
-              <Users className="w-5 h-5 mr-2" />
-              <span>Community page</span>
-            </Link>
+            <div className={`flex items-center p-2 rounded-lg ${isDisabled('/community') ? 'cursor-not-allowed' : 'hover:bg-gray-800 cursor-pointer'} ${isActive('/community') ? 'bg-gray-800' : 'bg-transparent'}`}>
+              <Users className={`w-5 h-5 mr-2 ${isDisabled('/community') ? 'text-gray-500' : 'text-white'}`} />
+              <span className={isDisabled('/community') ? 'text-gray-500' : 'text-white'}>Community page</span>
+            </div>
           </li>
           <li>
             <Link to="/lab" className={`flex items-center p-2 rounded-lg hover:bg-gray-800 text-white ${isActive('/lab') ? 'bg-gray-800' : 'bg-transparent'}`}>
@@ -60,42 +67,33 @@ const Sidebar = () => {
         </Link>
         
         <div className="flex flex-wrap gap-2 text-xs">
-          <Link to="/what-is-bornelabs" className="bg-transparent px-2 py-1 rounded hover:bg-gray-700">
-            What is Bornelabs
-          </Link>
-          <Link to="/project-id" className="bg-transparent px-2 py-1 rounded hover:bg-gray-700">
-            Project ID
-          </Link>
-          <Link to="/how-to-start-project" className="bg-transparent px-2 py-1 rounded hover:bg-gray-700">
-            How to start a project
-          </Link>
-          <Link to="/stories" className="bg-transparent px-2 py-1 rounded hover:bg-gray-700">
-            Stories
-          </Link>
-          <Link to="/iae" className="bg-transparent px-2 py-1 rounded hover:bg-gray-700">
-            IAE
-          </Link>
-          <Link to="/sas" className="bg-transparent px-2 py-1 rounded hover:bg-gray-700">
-            SAS
-          </Link>
-          <Link to="/faq" className="bg-transparent px-2 py-1 rounded hover:bg-gray-700">
-            FAQ
-          </Link>
-          <Link to="/papers" className="bg-transparent px-2 py-1 rounded hover:bg-gray-700">
-            Papers
-          </Link>
-          <Link to="/how-to-publish-paper" className="bg-transparent px-2 py-1 rounded hover:bg-gray-700">
-            How to publish a paper
-          </Link>
-          <Link to="/requests" className="bg-transparent px-2 py-1 rounded hover:bg-gray-700">
-            Requests
-          </Link>
-          <Link to="/community-page" className="bg-transparent px-2 py-1 rounded hover:bg-gray-700">
-            Community Page
-          </Link>
-          <Link to="/lab" className="bg-transparent px-2 py-1 rounded hover:bg-gray-700">
-            Lab
-          </Link>
+          {/* Quick links with disabled status */}
+          {[
+            { path: '/what-is-bornelabs', label: 'What is Bornelabs', disabled: false },
+            { path: '/project-id', label: 'Project ID', disabled: false },
+            { path: '/how-to-start-project', label: 'How to start a project', disabled: false },
+            { path: '/stories', label: 'Stories', disabled: false },
+            { path: '/iae', label: 'IAE', disabled: true },
+            { path: '/sas', label: 'SAS', disabled: true },
+            { path: '/faq', label: 'FAQ', disabled: false },
+            { path: '/papers', label: 'Papers', disabled: false },
+            { path: '/how-to-publish-paper', label: 'How to publish a paper', disabled: false },
+            { path: '/requests', label: 'Requests', disabled: true },
+            { path: '/community-page', label: 'Community Page', disabled: true },
+            { path: '/lab', label: 'Lab', disabled: false }
+          ].map((link, index) => (
+            <React.Fragment key={index}>
+              {link.disabled ? (
+                <div className="bg-transparent px-2 py-1 rounded cursor-not-allowed text-gray-500">
+                  {link.label}
+                </div>
+              ) : (
+                <Link to={link.path} className="bg-transparent px-2 py-1 rounded hover:bg-gray-700">
+                  {link.label}
+                </Link>
+              )}
+            </React.Fragment>
+          ))}
         </div>
       </div>
     </aside>

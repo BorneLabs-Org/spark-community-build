@@ -54,10 +54,10 @@ export const getProjects = async () => {
     image: item.image_url,
     sasLevel: item.sas_level,
     user: {
-      id: item.users.id,
-      name: item.users.name,
-      username: item.users.username,
-      avatar: item.users.avatar_url || 'https://github.com/shadcn.png'
+      id: item.users?.id,
+      name: item.users?.name,
+      username: item.users?.username,
+      avatar: item.users?.avatar_url || 'https://github.com/shadcn.png'
     }
   })) as Project[];
 };
@@ -94,10 +94,10 @@ export const getPosts = async () => {
     views: item.views || 0,
     createdAt: item.created_at,
     user: {
-      id: item.users.id,
-      name: item.users.name,
-      username: item.users.username,
-      avatar: item.users.avatar_url || 'https://github.com/shadcn.png'
+      id: item.users?.id,
+      name: item.users?.name,
+      username: item.users?.username,
+      avatar: item.users?.avatar_url || 'https://github.com/shadcn.png'
     }
   })) as Post[];
 };
@@ -136,10 +136,10 @@ export const getStories = async () => {
     image: item.image_url,
     createdAt: item.created_at,
     user: {
-      id: item.users.id,
-      name: item.users.name,
-      username: item.users.username,
-      avatar: item.users.avatar_url || 'https://github.com/shadcn.png'
+      id: item.users?.id,
+      name: item.users?.name,
+      username: item.users?.username,
+      avatar: item.users?.avatar_url || 'https://github.com/shadcn.png'
     },
     project: item.projects ? {
       id: item.projects.id,
@@ -147,10 +147,10 @@ export const getStories = async () => {
       description: item.projects.description,
       image: item.projects.image_url,
       user: {
-        id: item.users.id,
-        name: item.users.name,
-        username: item.users.username,
-        avatar: item.users.avatar_url || 'https://github.com/shadcn.png'
+        id: item.users?.id,
+        name: item.users?.name,
+        username: item.users?.username,
+        avatar: item.users?.avatar_url || 'https://github.com/shadcn.png'
       }
     } : undefined
   })) as Story[];
@@ -190,10 +190,10 @@ export const getPapers = async () => {
     createdAt: item.created_at,
     downloads: item.downloads || 0,
     user: {
-      id: item.users.id,
-      name: item.users.name,
-      username: item.users.username,
-      avatar: item.users.avatar_url || 'https://github.com/shadcn.png'
+      id: item.users?.id,
+      name: item.users?.name,
+      username: item.users?.username,
+      avatar: item.users?.avatar_url || 'https://github.com/shadcn.png'
     }
   })) as Paper[];
 };

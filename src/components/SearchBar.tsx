@@ -22,7 +22,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   };
   
   return (
-    <form onSubmit={handleSearch} className="flex items-center gap-2 w-full max-w-md">
+    <form onSubmit={handleSearch} className="flex items-center gap-2 w-full">
       <div className="relative flex-1">
         <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
         <Input 
@@ -30,7 +30,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
           placeholder={isPidSearch ? "Search by Project ID..." : "Search titles..."}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-8 bg-[#1a1a1a] border-gray-700 focus:border-gray-500 text-white"
+          className="pl-8 bg-[#1a1a1a] border-gray-700 focus:border-gray-500 text-white w-full"
         />
       </div>
       

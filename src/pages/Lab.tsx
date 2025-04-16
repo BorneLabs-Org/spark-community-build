@@ -9,7 +9,9 @@ const Lab = () => {
     <div className="flex flex-col h-screen">
       <Navbar />
       <div className="flex flex-1 overflow-hidden">
-        <Sidebar />
+        <div className="w-56 flex-shrink-0">
+          <Sidebar />
+        </div>
         <main className="flex-1 overflow-auto p-4 bg-[#121212]">
           <div className="flex flex-col items-center justify-center h-full">
             <img 
@@ -21,7 +23,9 @@ const Lab = () => {
             <p className="text-gray-400 mt-4 text-xl">Feature in development</p>
           </div>
         </main>
-        <RightSidebar />
+        <div className="hidden md:block w-56 flex-shrink-0">
+          <RightSidebar />
+        </div>
       </div>
     </div>
   );

@@ -67,31 +67,25 @@ const Sidebar = () => {
         </Link>
         
         <div className="flex flex-wrap gap-2 text-xs">
-          {/* Quick links with disabled status */}
+          {/* Quick links with all buttons below Help disabled */}
           {[
-            { path: '/what-is-bornelabs', label: 'What is Bornelabs', disabled: false },
-            { path: '/project-id', label: 'Project ID', disabled: false },
-            { path: '/how-to-start-project', label: 'How to start a project', disabled: false },
-            { path: '/stories', label: 'Stories', disabled: false },
+            { path: '/what-is-bornelabs', label: 'What is Bornelabs', disabled: true },
+            { path: '/project-id', label: 'Project ID', disabled: true },
+            { path: '/how-to-start-project', label: 'How to start a project', disabled: true },
+            { path: '/stories', label: 'Stories', disabled: true },
             { path: '/iae', label: 'IAE', disabled: true },
             { path: '/sas', label: 'SAS', disabled: true },
-            { path: '/faq', label: 'FAQ', disabled: false },
-            { path: '/papers', label: 'Papers', disabled: false },
-            { path: '/how-to-publish-paper', label: 'How to publish a paper', disabled: false },
+            { path: '/faq', label: 'FAQ', disabled: true },
+            { path: '/papers', label: 'Papers', disabled: true },
+            { path: '/how-to-publish-paper', label: 'How to publish a paper', disabled: true },
             { path: '/requests', label: 'Requests', disabled: true },
             { path: '/community-page', label: 'Community Page', disabled: true },
-            { path: '/lab', label: 'Lab', disabled: false }
+            { path: '/lab', label: 'Lab', disabled: true }
           ].map((link, index) => (
             <React.Fragment key={index}>
-              {link.disabled ? (
-                <div className="bg-transparent px-2 py-1 rounded cursor-not-allowed text-gray-500">
-                  {link.label}
-                </div>
-              ) : (
-                <Link to={link.path} className="bg-transparent px-2 py-1 rounded hover:bg-gray-700">
-                  {link.label}
-                </Link>
-              )}
+              <div className="bg-transparent px-2 py-1 rounded cursor-not-allowed text-gray-500">
+                {link.label}
+              </div>
             </React.Fragment>
           ))}
         </div>

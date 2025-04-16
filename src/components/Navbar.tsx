@@ -31,7 +31,7 @@ const Navbar = () => {
   
   return (
     <nav className="bg-[#121212] border-b border-gray-800 px-4 py-2">
-      <div className="flex items-center justify-between w-full">
+      <div className="flex items-center justify-between w-full flex-wrap">
         <div className="flex items-center">
           <Link to="/" className="flex items-center mr-4">
             <img 
@@ -42,21 +42,21 @@ const Navbar = () => {
             <div className="text-branding-blue font-bold text-2xl mr-1">Borne</div>
             <div className="text-branding-amber font-bold text-2xl">labs</div>
           </Link>
-          
-          <div className="hidden sm:block flex-1 mx-4 max-w-xl w-full">
-            <SearchBar onSearch={handleSearch} />
-          </div>
         </div>
         
-        <div>
+        <div className="flex-grow mx-4 max-w-3xl order-3 w-full sm:order-2 sm:w-auto mt-2 sm:mt-0">
+          <SearchBar onSearch={handleSearch} />
+        </div>
+        
+        <div className="order-2 sm:order-3">
           {isLoggedIn && currentUser ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center gap-2 hover:bg-[#191919]">
+                <Button variant="ghost" className="flex items-center gap-2 hover:bg-[#191919] group">
                   <img 
                     src={currentUser.avatar || "https://github.com/shadcn.png"} 
                     alt="User avatar" 
-                    className="h-10 w-10 rounded-full object-cover"
+                    className="h-10 w-10 rounded-full object-cover group-hover:ring-1 group-hover:ring-gray-700"
                   />
                   <ChevronDown size={16} />
                 </Button>
@@ -101,11 +101,6 @@ const Navbar = () => {
             </Link>
           )}
         </div>
-      </div>
-      
-      {/* Mobile search bar */}
-      <div className="sm:hidden w-full mt-2">
-        <SearchBar onSearch={handleSearch} />
       </div>
     </nav>
   );

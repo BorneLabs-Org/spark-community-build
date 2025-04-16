@@ -4,6 +4,7 @@ import { User, Project, Post, Story, Paper } from '@/types';
 export interface AppContextType {
   currentUser: User | null;
   isLoggedIn: boolean;
+  isLoading: boolean;
   setIsLoggedIn: (value: boolean) => void;
   setCurrentUser: (user: User | null) => void;
   projects: Project[];

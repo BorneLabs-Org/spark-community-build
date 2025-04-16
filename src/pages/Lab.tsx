@@ -9,7 +9,7 @@ const Lab = () => {
     <div className="flex flex-col h-screen">
       <Navbar />
       <div className="flex flex-1 overflow-hidden">
-        <div className="w-56 flex-shrink-0">
+        <div className="w-56 flex-shrink-0 hidden md:block">
           <Sidebar />
         </div>
         <main className="flex-1 overflow-auto p-4 bg-[#121212]">

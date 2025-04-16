@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Search, ChevronDown } from 'lucide-react';
+import { Search, ChevronDown, Menu } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { 
   DropdownMenu,
@@ -14,14 +14,16 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import SearchBar from '@/components/SearchBar';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useAuth } from '@/hooks/use-auth';
 
 const Navbar = () => {
-  const { currentUser, isLoggedIn, setIsLoggedIn, setCurrentUser } = useAppContext();
+  const { currentUser, isLoggedIn } = useAppContext();
+  const { signOut } = useAuth();
   const isMobile = useIsMobile();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   const handleLogout = () => {
-    setIsLoggedIn(false);
-    setCurrentUser(null);
+    signOut();
   };
 
   const handleSearch = (query: string, isPidSearch: boolean) => {
@@ -31,8 +33,8 @@ const Navbar = () => {
   
   return (
     <nav className="bg-[#121212] border-b border-gray-800 px-4 py-2">
-      <div className="flex items-center justify-between w-full flex-wrap">
-        <div className="flex items-center">
+      <div className="flex items-center w-full">
+        <div className="flex items-center flex-shrink-0">
           <Link to="/" className="flex items-center mr-4">
             <img 
               src="/lovable-uploads/272adb19-93cc-4c1c-b43d-970192a08d48.png" 
@@ -44,15 +46,26 @@ const Navbar = () => {
           </Link>
         </div>
         
-        <div className="flex-grow mx-4 max-w-3xl order-3 w-full sm:order-2 sm:w-auto mt-2 sm:mt-0">
+        {isMobile && (
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="ml-auto md:hidden"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            <Menu className="h-6 w-6 text-gray-400" />
+          </Button>
+        )}
+        
+        <div className={`flex-grow mx-4 hidden md:block max-w-3xl ${mobileMenuOpen ? 'mt-2 block w-full' : ''}`}>
           <SearchBar onSearch={handleSearch} />
         </div>
         
-        <div className="order-2 sm:order-3">
+        <div className="ml-auto">
           {isLoggedIn && currentUser ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center gap-2 hover:bg-[#191919] group">
+                <Button variant="ghost" className="flex items-center gap-2 hover:bg-[#1a1a1a] group">
                   <img 
                     src={currentUser.avatar || "https://github.com/shadcn.png"} 
                     alt="User avatar" 
@@ -102,6 +115,12 @@ const Navbar = () => {
           )}
         </div>
       </div>
+      
+      {isMobile && mobileMenuOpen && (
+        <div className="mt-2 w-full">
+          <SearchBar onSearch={handleSearch} />
+        </div>
+      )}
     </nav>
   );
 };

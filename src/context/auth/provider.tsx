@@ -16,40 +16,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check for active session on initial load
-    const initializeAuth = async () => {
-      setLoading(true);
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (session) {
-        setSession(session);
-        setUser(session.user);
-        
-        // Get user profile from the database
-        const { data: userData, error } = await supabase
-          .from('users')
-          .select('*')
-          .eq('id', session.user.id)
-          .single();
-        
-        if (userData && !error) {
-          setCurrentUser({
-            id: userData.id,
-            name: userData.name,
-            username: userData.username,
-            avatar: userData.avatar_url || 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?q=80&w=100&auto=format&fit=crop',
-            followers: 0
-          });
-          setIsLoggedIn(true);
-        }
-      }
-      
-      setLoading(false);
-    };
-
-    initializeAuth();
-
-    // Set up auth state listener
+    // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
         setSession(session);
@@ -71,7 +38,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 name: userData.name,
                 username: userData.username,
                 avatar: userData.avatar_url || 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?q=80&w=100&auto=format&fit=crop',
-                followers: 0
+                followers: userData.followers_count || 0
               });
               setIsLoggedIn(true);
             }
@@ -82,6 +49,35 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
       }
     );
+
+    // THEN check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      
+      if (session?.user) {
+        // Get user profile from the database
+        supabase
+          .from('users')
+          .select('*')
+          .eq('id', session.user.id)
+          .single()
+          .then(({ data: userData, error }) => {
+            if (userData && !error) {
+              setCurrentUser({
+                id: userData.id,
+                name: userData.name,
+                username: userData.username,
+                avatar: userData.avatar_url || 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?q=80&w=100&auto=format&fit=crop',
+                followers: userData.followers_count || 0
+              });
+              setIsLoggedIn(true);
+            }
+          });
+      }
+      
+      setLoading(false);
+    });
 
     return () => {
       subscription.unsubscribe();
@@ -184,7 +180,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           name: userData.name,
           username: userData.username,
           avatar: userData.avatar_url || 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?q=80&w=100&auto=format&fit=crop',
-          followers: 0
+          followers: userData.followers_count || 0
         });
         setIsLoggedIn(true);
         

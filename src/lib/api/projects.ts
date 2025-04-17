@@ -2,80 +2,72 @@
 import { supabase } from '@/lib/supabase';
 import { Project } from '@/types';
 
-// Projects functions
 export const getProjects = async () => {
-  console.log('Fetching projects...');
   try {
+    console.log('Fetching projects...');
+    
+    // Fetch projects with all necessary details
     const { data, error } = await supabase
       .from('projects')
       .select(`
         id,
-        name,
-        description,
-        image_url,
+        name, 
+        description, 
+        image_url, 
         sas_level,
-        created_at,
         user_id
       `)
       .order('created_at', { ascending: false });
-      
+    
     if (error) {
       console.error('Error fetching projects:', error);
       return [];
     }
     
+    // If no projects, return empty array
     if (!data || data.length === 0) {
       console.log('No projects found');
       return [];
     }
     
-    console.log('Projects fetched:', data.length);
+    // Fetch associated user details
+    const userIds = [...new Set(data.map(project => project.user_id).filter(Boolean))];
+    const { data: users, error: usersError } = userIds.length > 0 
+      ? await supabase
+          .from('users')
+          .select('id, name, username, avatar_url')
+          .in('id', userIds)
+      : { data: [], error: null };
     
-    // Now fetch the user data separately
-    const userIds = data.map(item => item.user_id).filter(Boolean);
-    
-    let usersData: Record<string, any> = {};
-    
-    if (userIds.length > 0) {
-      const { data: users, error: usersError } = await supabase
-        .from('users')
-        .select('id, name, username, avatar_url')
-        .in('id', userIds);
-        
-      if (usersError) {
-        console.error('Error fetching users:', usersError);
-      } else if (users) {
-        usersData = users.reduce((acc: Record<string, any>, user) => {
-          acc[user.id] = user;
-          return acc;
-        }, {});
-      }
+    if (usersError) {
+      console.error('Error fetching users:', usersError);
     }
     
-    return data.map(item => {
-      const user = usersData[item.user_id] || { 
-        id: item.user_id, 
-        name: 'Unknown User', 
-        username: 'unknown', 
-        avatar_url: 'https://github.com/shadcn.png' 
+    // Map projects with user details
+    return data.map(project => {
+      const projectUser = users?.find(user => user.id === project.user_id) || {
+        id: project.user_id,
+        name: 'Unknown User',
+        username: 'unknown',
+        avatar_url: 'https://github.com/shadcn.png'
       };
       
       return {
-        id: item.id,
-        name: item.name,
-        description: item.description,
-        image: item.image_url,
-        sasLevel: item.sas_level,
+        id: project.id,
+        name: project.name,
+        description: project.description,
+        image: project.image_url,
+        sasLevel: project.sas_level,
         user: {
-          id: user.id,
-          name: user.name,
-          username: user.username,
-          avatar: user.avatar_url || 'https://github.com/shadcn.png'
+          id: projectUser.id,
+          name: projectUser.name,
+          username: projectUser.username,
+          avatar: projectUser.avatar_url || 'https://github.com/shadcn.png'
         }
-      };
-    }) as Project[];
+      } as Project;
+    });
   } catch (error) {
-    console.error('Error in getProjects:', error);
+    console.error('Unexpected error in getProjects:', error);
     return [];
   }
 };

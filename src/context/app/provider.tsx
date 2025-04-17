@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { AppContext } from './context';
 import { User, Paper, Project, Post, Story } from '@/types';
 import * as api from '@/lib/api';
+import { supabase } from '@/lib/supabase';
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -13,69 +14,48 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [papersList, setPapersList] = useState<Paper[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   
-  // Load initial data
+  // Comprehensive data loading function
+  const loadData = async () => {
+    setIsLoading(true);
+    try {
+      console.log('Loading initial data...');
+      
+      // Fetch data in parallel
+      const [projects, posts, stories, papers] = await Promise.all([
+        api.getProjects(),
+        api.getPosts(),
+        api.getStories(),
+        api.getPapers()
+      ]);
+      
+      console.log(`Loaded: 
+        ${projects.length} projects, 
+        ${posts.length} posts, 
+        ${stories.length} stories, 
+        ${papers.length} papers`);
+      
+      // Update state with fetched data
+      setProjectsList(projects);
+      setPostsList(posts);
+      setStoriesList(stories);
+      setPapersList(papers);
+    } catch (error) {
+      console.error('Error loading data:', error);
+      // Optionally show a toast or error message
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  // Initial data load
   useEffect(() => {
-    const loadInitialData = async () => {
-      setIsLoading(true);
-      try {
-        console.log('Loading initial data...');
-        
-        // Check for current user
-        const user = await api.getCurrentUser();
-        if (user) {
-          console.log('Current user found:', user.username);
-          setCurrentUser(user);
-          setIsLoggedIn(true);
-        } else {
-          console.log('No current user found');
-        }
-        
-        // Load projects, posts, stories, papers
-        console.log('Loading data from APIs...');
-        const projects = await api.getProjects();
-        const posts = await api.getPosts();
-        const stories = await api.getStories();
-        const papers = await api.getPapers();
-        
-        console.log(`Loaded ${projects.length} projects, ${posts.length} posts, ${stories.length} stories, ${papers.length} papers`);
-        
-        setProjectsList(projects);
-        setPostsList(posts);
-        setStoriesList(stories);
-        setPapersList(papers);
-      } catch (error) {
-        console.error('Error loading initial data:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
-    loadInitialData();
+    loadData();
   }, []);
   
-  // Reload data when user logs in or out
+  // Reload data when login state changes
   useEffect(() => {
     if (isLoggedIn) {
-      const reloadData = async () => {
-        try {
-          console.log('Reloading data after auth change...');
-          const [projects, posts, stories, papers] = await Promise.all([
-            api.getProjects(),
-            api.getPosts(),
-            api.getStories(),
-            api.getPapers()
-          ]);
-          
-          setProjectsList(projects);
-          setPostsList(posts);
-          setStoriesList(stories);
-          setPapersList(papers);
-        } catch (error) {
-          console.error('Error reloading data:', error);
-        }
-      };
-      
-      reloadData();
+      loadData();
     }
   }, [isLoggedIn]);
   

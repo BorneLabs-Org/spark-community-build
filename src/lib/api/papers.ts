@@ -4,7 +4,7 @@ import { Paper } from '@/types';
 
 // Papers functions
 export const getPapers = async () => {
-  console.log('Fetching papers...');
+  console.log('Fetching papers from Supabase...');
   try {
     const { data, error } = await supabase
       .from('papers')
@@ -23,39 +23,35 @@ export const getPapers = async () => {
       
     if (error) {
       console.error('Error fetching papers:', error);
-      return [];
+      throw error;
     }
     
     if (!data || data.length === 0) {
-      console.log('No papers found');
+      console.log('No papers found in Supabase');
       return [];
     }
     
-    console.log('Papers fetched:', data.length);
+    console.log('Papers fetched successfully:', data.length);
     
-    // Now fetch the user data separately
-    const userIds = data.map(item => item.user_id).filter(Boolean);
-    
-    let usersData: Record<string, any> = {};
+    // Fetch users data
+    const userIds = [...new Set(data.map(item => item.user_id).filter(Boolean))];
+    let users = [];
     
     if (userIds.length > 0) {
-      const { data: users, error: usersError } = await supabase
+      const { data: usersData, error: usersError } = await supabase
         .from('users')
         .select('id, name, username, avatar_url')
         .in('id', userIds);
         
       if (usersError) {
-        console.error('Error fetching users:', usersError);
-      } else if (users) {
-        usersData = users.reduce((acc: Record<string, any>, user) => {
-          acc[user.id] = user;
-          return acc;
-        }, {});
+        console.error('Error fetching users for papers:', usersError);
+      } else {
+        users = usersData || [];
       }
     }
     
     return data.map(item => {
-      const user = usersData[item.user_id] || { 
+      const user = users.find(u => u.id === item.user_id) || { 
         id: item.user_id, 
         name: 'Unknown User', 
         username: 'unknown', 
@@ -81,6 +77,43 @@ export const getPapers = async () => {
     }) as Paper[];
   } catch (error) {
     console.error('Error in getPapers:', error);
-    return [];
+    throw error;
+  }
+};
+
+export const addPaper = async (paper: Omit<Paper, 'id' | 'createdAt' | 'downloads'>) => {
+  try {
+    const { data, error } = await supabase
+      .from('papers')
+      .insert({
+        title: paper.title,
+        description: paper.description,
+        file_url: paper.fileUrl,
+        file_type: paper.fileType,
+        cover_image: paper.coverImage,
+        user_id: paper.user.id
+      })
+      .select()
+      .single();
+      
+    if (error) {
+      console.error('Error creating paper:', error);
+      throw error;
+    }
+    
+    return {
+      id: data.id,
+      title: data.title,
+      description: data.description,
+      fileUrl: data.file_url,
+      fileType: data.file_type,
+      coverImage: data.cover_image,
+      createdAt: data.created_at,
+      downloads: 0,
+      user: paper.user
+    } as Paper;
+  } catch (error) {
+    console.error('Failed to add paper:', error);
+    throw error;
   }
 };

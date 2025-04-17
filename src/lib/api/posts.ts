@@ -4,7 +4,7 @@ import { Post } from '@/types';
 
 // Posts functions
 export const getPosts = async () => {
-  console.log('Fetching posts...');
+  console.log('Fetching posts from Supabase...');
   try {
     const { data, error } = await supabase
       .from('posts')
@@ -22,39 +22,35 @@ export const getPosts = async () => {
       
     if (error) {
       console.error('Error fetching posts:', error);
-      return [];
+      throw error;
     }
     
     if (!data || data.length === 0) {
-      console.log('No posts found');
+      console.log('No posts found in Supabase');
       return [];
     }
     
-    console.log('Posts fetched:', data.length);
+    console.log('Posts fetched successfully:', data.length);
     
     // Now fetch the user data separately
-    const userIds = data.map(item => item.user_id).filter(Boolean);
-    
-    let usersData: Record<string, any> = {};
+    const userIds = [...new Set(data.map(item => item.user_id).filter(Boolean))];
+    let users = [];
     
     if (userIds.length > 0) {
-      const { data: users, error: usersError } = await supabase
+      const { data: usersData, error: usersError } = await supabase
         .from('users')
         .select('id, name, username, avatar_url')
         .in('id', userIds);
         
       if (usersError) {
-        console.error('Error fetching users:', usersError);
-      } else if (users) {
-        usersData = users.reduce((acc: Record<string, any>, user) => {
-          acc[user.id] = user;
-          return acc;
-        }, {});
+        console.error('Error fetching users for posts:', usersError);
+      } else {
+        users = usersData || [];
       }
     }
     
     return data.map(item => {
-      const user = usersData[item.user_id] || { 
+      const user = users.find(u => u.id === item.user_id) || { 
         id: item.user_id, 
         name: 'Unknown User', 
         username: 'unknown', 
@@ -79,6 +75,41 @@ export const getPosts = async () => {
     }) as Post[];
   } catch (error) {
     console.error('Error in getPosts:', error);
-    return [];
+    throw error;
+  }
+};
+
+export const addPost = async (post: Omit<Post, 'id' | 'createdAt' | 'views'>) => {
+  try {
+    const { data, error } = await supabase
+      .from('posts')
+      .insert({
+        title: post.title,
+        description: post.description,
+        media_url: post.media,
+        media_type: post.mediaType,
+        user_id: post.user.id
+      })
+      .select()
+      .single();
+      
+    if (error) {
+      console.error('Error creating post:', error);
+      throw error;
+    }
+    
+    return {
+      id: data.id,
+      title: data.title,
+      description: data.description,
+      media: data.media_url,
+      mediaType: data.media_type,
+      views: 0,
+      createdAt: data.created_at,
+      user: post.user
+    } as Post;
+  } catch (error) {
+    console.error('Failed to add post:', error);
+    throw error;
   }
 };

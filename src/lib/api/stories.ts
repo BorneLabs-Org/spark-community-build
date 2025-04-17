@@ -4,7 +4,7 @@ import { Story } from '@/types';
 
 // Stories functions
 export const getStories = async () => {
-  console.log('Fetching stories...');
+  console.log('Fetching stories from Supabase...');
   try {
     const { data, error } = await supabase
       .from('stories')
@@ -21,66 +21,59 @@ export const getStories = async () => {
       
     if (error) {
       console.error('Error fetching stories:', error);
-      return [];
+      throw error;
     }
     
     if (!data || data.length === 0) {
-      console.log('No stories found');
+      console.log('No stories found in Supabase');
       return [];
     }
     
-    console.log('Stories fetched:', data.length);
+    console.log('Stories fetched successfully:', data.length);
     
-    // Now fetch the user data separately
-    const userIds = data.map(item => item.user_id).filter(Boolean);
-    
-    let usersData: Record<string, any> = {};
+    // Fetch users data
+    const userIds = [...new Set(data.map(item => item.user_id).filter(Boolean))];
+    let users = [];
     
     if (userIds.length > 0) {
-      const { data: users, error: usersError } = await supabase
+      const { data: usersData, error: usersError } = await supabase
         .from('users')
         .select('id, name, username, avatar_url')
         .in('id', userIds);
         
       if (usersError) {
-        console.error('Error fetching users:', usersError);
-      } else if (users) {
-        usersData = users.reduce((acc: Record<string, any>, user) => {
-          acc[user.id] = user;
-          return acc;
-        }, {});
+        console.error('Error fetching users for stories:', usersError);
+      } else {
+        users = usersData || [];
       }
     }
     
     // Fetch project data if needed
     const projectIds = data.filter(item => item.project_id).map(item => item.project_id);
-    let projectsData: Record<string, any> = {};
+    let projects = [];
     
     if (projectIds.length > 0) {
-      const { data: projects, error: projectsError } = await supabase
+      const { data: projectsData, error: projectsError } = await supabase
         .from('projects')
         .select('id, name, description, image_url, user_id')
         .in('id', projectIds);
         
       if (projectsError) {
-        console.error('Error fetching projects:', projectsError);
-      } else if (projects) {
-        projectsData = projects.reduce((acc: Record<string, any>, project) => {
-          acc[project.id] = project;
-          return acc;
-        }, {});
+        console.error('Error fetching projects for stories:', projectsError);
+      } else {
+        projects = projectsData || [];
       }
     }
     
     return data.map(item => {
-      const user = usersData[item.user_id] || { 
+      const user = users.find(u => u.id === item.user_id) || { 
         id: item.user_id, 
         name: 'Unknown User', 
         username: 'unknown', 
         avatar_url: 'https://github.com/shadcn.png' 
       };
       
-      const projectData = item.project_id ? projectsData[item.project_id] : null;
+      const projectData = item.project_id ? projects.find(p => p.id === item.project_id) : null;
       
       return {
         id: item.id,
@@ -110,6 +103,40 @@ export const getStories = async () => {
     }) as Story[];
   } catch (error) {
     console.error('Error in getStories:', error);
-    return [];
+    throw error;
+  }
+};
+
+export const addStory = async (story: Omit<Story, 'id' | 'createdAt'>) => {
+  try {
+    const { data, error } = await supabase
+      .from('stories')
+      .insert({
+        title: story.title,
+        content: story.content,
+        image_url: story.image,
+        user_id: story.user.id,
+        project_id: story.project?.id
+      })
+      .select()
+      .single();
+      
+    if (error) {
+      console.error('Error creating story:', error);
+      throw error;
+    }
+    
+    return {
+      id: data.id,
+      title: data.title,
+      content: data.content,
+      image: data.image_url,
+      createdAt: data.created_at,
+      user: story.user,
+      project: story.project
+    } as Story;
+  } catch (error) {
+    console.error('Failed to add story:', error);
+    throw error;
   }
 };

@@ -4,6 +4,7 @@ import { AppContext } from './context';
 import { User, Paper, Project, Post, Story } from '@/types';
 import * as api from '@/lib/api';
 import { supabase } from '@/lib/supabase';
+import { toast } from '@/components/ui/use-toast';
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -18,17 +19,29 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const loadData = async () => {
     setIsLoading(true);
     try {
-      console.log('Loading initial data...');
+      console.log('Loading initial data from Supabase...');
       
-      // Fetch data in parallel
+      // Fetch data in parallel with better error handling
       const [projects, posts, stories, papers] = await Promise.all([
-        api.getProjects(),
-        api.getPosts(),
-        api.getStories(),
-        api.getPapers()
+        api.getProjects().catch(err => {
+          console.error('Failed to load projects:', err);
+          return [];
+        }),
+        api.getPosts().catch(err => {
+          console.error('Failed to load posts:', err);
+          return [];
+        }),
+        api.getStories().catch(err => {
+          console.error('Failed to load stories:', err);
+          return [];
+        }),
+        api.getPapers().catch(err => {
+          console.error('Failed to load papers:', err);
+          return [];
+        })
       ]);
       
-      console.log(`Loaded: 
+      console.log(`Loaded from Supabase: 
         ${projects.length} projects, 
         ${posts.length} posts, 
         ${stories.length} stories, 
@@ -40,14 +53,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setStoriesList(stories);
       setPapersList(papers);
     } catch (error) {
-      console.error('Error loading data:', error);
-      // Optionally show a toast or error message
+      console.error('Error loading data from Supabase:', error);
+      toast({
+        title: "Data loading error",
+        description: "There was a problem connecting to the database. Please try again later.",
+        variant: "destructive"
+      });
     } finally {
       setIsLoading(false);
     }
   };
   
-  // Initial data load
+  // Initial data load - run once on mount
   useEffect(() => {
     loadData();
   }, []);
@@ -60,19 +77,108 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   }, [isLoggedIn]);
   
   const addPaper = async (paper: Paper) => {
-    setPapersList(prevPapers => [paper, ...prevPapers]);
+    try {
+      // First, add to Supabase
+      const { data, error } = await supabase
+        .from('papers')
+        .insert({
+          title: paper.title,
+          description: paper.description,
+          file_url: paper.fileUrl,
+          file_type: paper.fileType,
+          cover_image: paper.coverImage,
+          user_id: currentUser?.id
+        })
+        .select('*')
+        .single();
+        
+      if (error) throw error;
+      
+      // Then update local state
+      setPapersList(prevPapers => [paper, ...prevPapers]);
+      return true;
+    } catch (error) {
+      console.error('Error adding paper:', error);
+      return false;
+    }
   };
   
   const addProject = async (project: Project) => {
-    setProjectsList(prevProjects => [project, ...prevProjects]);
+    try {
+      // First, add to Supabase
+      const { data, error } = await supabase
+        .from('projects')
+        .insert({
+          name: project.name,
+          description: project.description,
+          image_url: project.image,
+          sas_level: project.sasLevel,
+          user_id: currentUser?.id
+        })
+        .select('*')
+        .single();
+        
+      if (error) throw error;
+      
+      // Then update local state
+      setProjectsList(prevProjects => [project, ...prevProjects]);
+      return true;
+    } catch (error) {
+      console.error('Error adding project:', error);
+      return false;
+    }
   };
 
   const addPost = async (post: Post) => {
-    setPostsList(prevPosts => [post, ...prevPosts]);
+    try {
+      // First, add to Supabase
+      const { data, error } = await supabase
+        .from('posts')
+        .insert({
+          title: post.title,
+          description: post.description,
+          media_url: post.media,
+          media_type: post.mediaType,
+          user_id: currentUser?.id
+        })
+        .select('*')
+        .single();
+        
+      if (error) throw error;
+      
+      // Then update local state
+      setPostsList(prevPosts => [post, ...prevPosts]);
+      return true;
+    } catch (error) {
+      console.error('Error adding post:', error);
+      return false;
+    }
   };
 
   const addStory = async (story: Story) => {
-    setStoriesList(prevStories => [story, ...prevStories]);
+    try {
+      // First, add to Supabase
+      const { data, error } = await supabase
+        .from('stories')
+        .insert({
+          title: story.title,
+          content: story.content,
+          image_url: story.image,
+          user_id: currentUser?.id,
+          project_id: story.project?.id
+        })
+        .select('*')
+        .single();
+        
+      if (error) throw error;
+      
+      // Then update local state
+      setStoriesList(prevStories => [story, ...prevStories]);
+      return true;
+    } catch (error) {
+      console.error('Error adding story:', error);
+      return false;
+    }
   };
   
   return (

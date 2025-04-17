@@ -24,9 +24,11 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
           <h3 className="text-lg font-semibold text-white">{project.name}</h3>
         </div>
         
-        <div className="absolute top-2 left-2 bg-[#333] px-2 py-0.5 rounded text-sm text-white">
-          {project.sasLevel}
-        </div>
+        {project.sasLevel && (
+          <div className="absolute top-2 left-2 bg-[#333] px-2 py-0.5 rounded text-sm text-white">
+            {project.sasLevel}
+          </div>
+        )}
         
         <button className="absolute top-2 right-2 bg-[#222] p-1 rounded-md hover:bg-[#333] transition-colors">
           <Bookmark size={18} className={project.bookmarked ? "fill-yellow-500 text-yellow-500" : "text-white"} />

@@ -50,7 +50,7 @@ const StoryCard = ({ story, isCompact = false }: StoryCardProps) => {
         </div>
         
         <Link to={`/stories/${story.id}`} className="block">
-          <h2 className={`${isCompact ? 'text-lg' : 'text-xl'} font-bold text-white mb-2 hover:text-blue-400 transition-colors`}>{title}</h2>
+          <h2 className={`${isCompact ? 'text-lg' : 'text-xl'} font-bold text-white mb-2 hover:text-blue-400 transition-colors break-words`}>{title}</h2>
           
           {image ? (
             <div className="flex flex-col md:flex-row gap-4 mb-4">
@@ -62,12 +62,12 @@ const StoryCard = ({ story, isCompact = false }: StoryCardProps) => {
                 />
               </div>
               <div className="md:w-2/3">
-                <p className="text-gray-300 leading-relaxed">{truncatedContent}</p>
+                <p className="text-gray-300 leading-relaxed break-words whitespace-normal">{truncatedContent}</p>
               </div>
             </div>
           ) : (
             <div className="relative min-h-[120px] mb-6">
-              <p className="text-gray-300 leading-relaxed">{truncatedContent}</p>
+              <p className="text-gray-300 leading-relaxed break-words whitespace-normal">{truncatedContent}</p>
               <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#1a1a1a] to-transparent"></div>
             </div>
           )}
@@ -82,7 +82,7 @@ const StoryCard = ({ story, isCompact = false }: StoryCardProps) => {
           {project && (
             <Link to={`/projects/${project.id}`} className="flex items-center text-gray-400 hover:text-blue-400 transition-colors">
               <BookOpen size={14} className="mr-1" />
-              <span>Related Project: {project.name}</span>
+              <span className="truncate max-w-[200px]">Related Project: {project.name}</span>
             </Link>
           )}
         </div>

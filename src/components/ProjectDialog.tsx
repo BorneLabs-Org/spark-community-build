@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Upload } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export const ProjectDialog = () => {
   const { addProject, currentUser } = useAppContext();
@@ -15,6 +16,7 @@ export const ProjectDialog = () => {
   const [projectName, setProjectName] = useState('');
   const [projectId, setProjectId] = useState('');
   const [description, setDescription] = useState('');
+  const [sasLevel, setSasLevel] = useState('SAS.1');
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   
@@ -51,7 +53,7 @@ export const ProjectDialog = () => {
       description,
       image: imagePreview,
       user: currentUser!,
-      sasLevel: "SAS.1"
+      sasLevel: sasLevel
     };
     
     addProject(newProject);
@@ -65,6 +67,7 @@ export const ProjectDialog = () => {
     setProjectName('');
     setProjectId('');
     setDescription('');
+    setSasLevel('SAS.1');
     setImageFile(null);
     setImagePreview(null);
   };
@@ -107,6 +110,21 @@ export const ProjectDialog = () => {
             onChange={(e) => setDescription(e.target.value)}
             className="bg-[#1a1a1a] border-gray-700 min-h-[100px]"
           />
+        </div>
+        
+        <div className="space-y-2">
+          <Label htmlFor="sasLevel">SAS Level</Label>
+          <Select value={sasLevel} onValueChange={(value) => setSasLevel(value)}>
+            <SelectTrigger className="bg-[#1a1a1a] border-gray-700">
+              <SelectValue placeholder="Select SAS level" />
+            </SelectTrigger>
+            <SelectContent className="bg-[#1a1a1a] border-gray-700 text-white">
+              <SelectItem value="SAS.1">SAS.1</SelectItem>
+              <SelectItem value="SAS.2">SAS.2</SelectItem>
+              <SelectItem value="SAS.3">SAS.3</SelectItem>
+              <SelectItem value="SAS.4">SAS.4</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
         
         <div className="space-y-2">

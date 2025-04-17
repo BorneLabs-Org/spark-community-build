@@ -22,7 +22,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
         </div>
         
         <div className="absolute bottom-0 left-0 p-2 w-full">
-          <h3 className="text-sm font-semibold text-white truncate">{post.title}</h3>
+          <h3 className="text-sm font-semibold text-white line-clamp-2">{post.title}</h3>
           
           <div className="flex items-center mt-1">
             <img 

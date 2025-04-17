@@ -21,7 +21,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
         </div>
         
         <div className="absolute bottom-0 left-0 p-3 w-full">
-          <h3 className="text-lg font-semibold text-white">{project.name}</h3>
+          <h3 className="text-lg font-semibold text-white line-clamp-2">{project.name}</h3>
         </div>
         
         {project.sasLevel && (

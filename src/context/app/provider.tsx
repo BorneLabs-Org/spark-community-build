@@ -18,20 +18,26 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const loadInitialData = async () => {
       setIsLoading(true);
       try {
+        console.log('Loading initial data...');
+        
         // Check for current user
         const user = await api.getCurrentUser();
         if (user) {
+          console.log('Current user found:', user.username);
           setCurrentUser(user);
           setIsLoggedIn(true);
+        } else {
+          console.log('No current user found');
         }
         
         // Load projects, posts, stories, papers
-        const [projects, posts, stories, papers] = await Promise.all([
-          api.getProjects(),
-          api.getPosts(),
-          api.getStories(),
-          api.getPapers()
-        ]);
+        console.log('Loading data from APIs...');
+        const projects = await api.getProjects();
+        const posts = await api.getPosts();
+        const stories = await api.getStories();
+        const papers = await api.getPapers();
+        
+        console.log(`Loaded ${projects.length} projects, ${posts.length} posts, ${stories.length} stories, ${papers.length} papers`);
         
         setProjectsList(projects);
         setPostsList(posts);
@@ -46,6 +52,32 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     
     loadInitialData();
   }, []);
+  
+  // Reload data when user logs in or out
+  useEffect(() => {
+    if (isLoggedIn) {
+      const reloadData = async () => {
+        try {
+          console.log('Reloading data after auth change...');
+          const [projects, posts, stories, papers] = await Promise.all([
+            api.getProjects(),
+            api.getPosts(),
+            api.getStories(),
+            api.getPapers()
+          ]);
+          
+          setProjectsList(projects);
+          setPostsList(posts);
+          setStoriesList(stories);
+          setPapersList(papers);
+        } catch (error) {
+          console.error('Error reloading data:', error);
+        }
+      };
+      
+      reloadData();
+    }
+  }, [isLoggedIn]);
   
   const addPaper = async (paper: Paper) => {
     setPapersList(prevPapers => [paper, ...prevPapers]);

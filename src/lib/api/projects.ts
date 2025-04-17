@@ -4,42 +4,78 @@ import { Project } from '@/types';
 
 // Projects functions
 export const getProjects = async () => {
-  const { data, error } = await supabase
-    .from('projects')
-    .select(`
-      id,
-      name,
-      description,
-      image_url,
-      sas_level,
-      created_at,
-      users:user_id (
+  console.log('Fetching projects...');
+  try {
+    const { data, error } = await supabase
+      .from('projects')
+      .select(`
         id,
         name,
-        username,
-        avatar_url
-      )
-    `)
-    .order('created_at', { ascending: false });
+        description,
+        image_url,
+        sas_level,
+        created_at,
+        user_id
+      `)
+      .order('created_at', { ascending: false });
+      
+    if (error) {
+      console.error('Error fetching projects:', error);
+      return [];
+    }
     
-  if (error || !data) return [];
-  
-  return data.map(item => {
-    // Ensure users is treated as a single object, not an array
-    const userObj = item.users as any;
+    if (!data || data.length === 0) {
+      console.log('No projects found');
+      return [];
+    }
     
-    return {
-      id: item.id,
-      name: item.name,
-      description: item.description,
-      image: item.image_url,
-      sasLevel: item.sas_level,
-      user: {
-        id: userObj ? userObj.id : null,
-        name: userObj ? userObj.name : null,
-        username: userObj ? userObj.username : null,
-        avatar: (userObj && userObj.avatar_url) || 'https://github.com/shadcn.png'
+    console.log('Projects fetched:', data.length);
+    
+    // Now fetch the user data separately
+    const userIds = data.map(item => item.user_id).filter(Boolean);
+    
+    let usersData: Record<string, any> = {};
+    
+    if (userIds.length > 0) {
+      const { data: users, error: usersError } = await supabase
+        .from('users')
+        .select('id, name, username, avatar_url')
+        .in('id', userIds);
+        
+      if (usersError) {
+        console.error('Error fetching users:', usersError);
+      } else if (users) {
+        usersData = users.reduce((acc: Record<string, any>, user) => {
+          acc[user.id] = user;
+          return acc;
+        }, {});
       }
-    };
-  }) as Project[];
+    }
+    
+    return data.map(item => {
+      const user = usersData[item.user_id] || { 
+        id: item.user_id, 
+        name: 'Unknown User', 
+        username: 'unknown', 
+        avatar_url: 'https://github.com/shadcn.png' 
+      };
+      
+      return {
+        id: item.id,
+        name: item.name,
+        description: item.description,
+        image: item.image_url,
+        sasLevel: item.sas_level,
+        user: {
+          id: user.id,
+          name: user.name,
+          username: user.username,
+          avatar: user.avatar_url || 'https://github.com/shadcn.png'
+        }
+      };
+    }) as Project[];
+  } catch (error) {
+    console.error('Error in getProjects:', error);
+    return [];
+  }
 };

@@ -19,28 +19,66 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
+        console.log('Auth state changed:', event, session?.user?.id);
         setSession(session);
         setUser(session?.user ?? null);
         
         if (event === 'SIGNED_IN' && session) {
           // Use setTimeout to prevent potential deadlocks with Supabase
           setTimeout(async () => {
-            // Get user profile from the database
-            const { data: userData, error } = await supabase
-              .from('users')
-              .select('*')
-              .eq('id', session.user.id)
-              .single();
-            
-            if (userData && !error) {
-              setCurrentUser({
-                id: userData.id,
-                name: userData.name,
-                username: userData.username,
-                avatar: userData.avatar_url || 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?q=80&w=100&auto=format&fit=crop',
-                followers: userData.followers_count || 0
-              });
+            try {
+              // Get user profile from the database
+              const { data: userData, error } = await supabase
+                .from('users')
+                .select('*')
+                .eq('id', session.user.id)
+                .maybeSingle();
+              
+              if (error) {
+                console.error('Error fetching user data:', error);
+                return;
+              }
+              
+              if (!userData) {
+                // User doesn't exist in the database yet, try to create
+                const metadata = session.user.user_metadata || {};
+                
+                const { data: newUser, error: insertError } = await supabase
+                  .from('users')
+                  .insert({
+                    id: session.user.id,
+                    name: metadata.name || session.user.email?.split('@')[0] || 'User',
+                    username: metadata.username || session.user.email?.split('@')[0] || `user_${Date.now()}`,
+                    email: session.user.email
+                  })
+                  .select('*')
+                  .single();
+                
+                if (insertError) {
+                  console.error('Error creating user in database:', insertError);
+                  return;
+                }
+                
+                setCurrentUser({
+                  id: newUser.id,
+                  name: newUser.name,
+                  username: newUser.username,
+                  avatar: newUser.avatar_url || 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?q=80&w=100&auto=format&fit=crop',
+                  followers: newUser.followers_count || 0
+                });
+              } else {
+                setCurrentUser({
+                  id: userData.id,
+                  name: userData.name,
+                  username: userData.username,
+                  avatar: userData.avatar_url || 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?q=80&w=100&auto=format&fit=crop',
+                  followers: userData.followers_count || 0
+                });
+              }
+              
               setIsLoggedIn(true);
+            } catch (error) {
+              console.error('Error in auth state change handler:', error);
             }
           }, 0);
         } else if (event === 'SIGNED_OUT') {
@@ -52,6 +90,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     // THEN check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('Initial session check:', session?.user?.id);
       setSession(session);
       setUser(session?.user ?? null);
       
@@ -61,9 +100,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           .from('users')
           .select('*')
           .eq('id', session.user.id)
-          .single()
+          .maybeSingle()
           .then(({ data: userData, error }) => {
-            if (userData && !error) {
+            if (error) {
+              console.error('Error fetching initial user data:', error);
+              setLoading(false);
+              return;
+            }
+            
+            if (userData) {
               setCurrentUser({
                 id: userData.id,
                 name: userData.name,
@@ -72,11 +117,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 followers: userData.followers_count || 0
               });
               setIsLoggedIn(true);
+            } else {
+              console.log('User not found in database during initial check');
             }
+            setLoading(false);
           });
+      } else {
+        setLoading(false);
       }
-      
-      setLoading(false);
     });
 
     return () => {
@@ -93,7 +141,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         .from('users')
         .select('username')
         .eq('username', username)
-        .single();
+        .maybeSingle();
       
       if (usernameCheck) {
         toast({
@@ -120,6 +168,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (error) throw error;
       
       if (data.user) {
+        // Create user profile in database
+        const { error: profileError } = await supabase
+          .from('users')
+          .insert({
+            id: data.user.id,
+            name,
+            username,
+            email
+          });
+          
+        if (profileError) {
+          console.error('Error creating user profile:', profileError);
+          throw profileError;
+        }
+        
         toast({
           title: "Account created",
           description: "Your account has been successfully created"
@@ -165,28 +228,56 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           .from('users')
           .select('*')
           .eq('id', data.user.id)
-          .single();
+          .maybeSingle();
         
-        if (profileError) throw profileError;
+        // If profile doesn't exist yet, create it
+        if (!userData && !profileError) {
+          const metadata = data.user.user_metadata || {};
+          
+          const { data: newUser, error: insertError } = await supabase
+            .from('users')
+            .insert({
+              id: data.user.id,
+              name: metadata.name || data.user.email?.split('@')[0] || 'User',
+              username: metadata.username || data.user.email?.split('@')[0] || `user_${Date.now()}`,
+              email: data.user.email
+            })
+            .select('*')
+            .single();
+            
+          if (insertError) throw insertError;
+          
+          setCurrentUser({
+            id: newUser.id,
+            name: newUser.name,
+            username: newUser.username,
+            avatar: newUser.avatar_url || 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?q=80&w=100&auto=format&fit=crop',
+            followers: 0
+          });
+        } else if (userData) {
+          // Update app context with existing user
+          setCurrentUser({
+            id: userData.id,
+            name: userData.name,
+            username: userData.username,
+            avatar: userData.avatar_url || 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?q=80&w=100&auto=format&fit=crop',
+            followers: userData.followers_count || 0
+          });
+        } else if (profileError) {
+          throw profileError;
+        }
+        
+        setIsLoggedIn(true);
         
         toast({
           title: "Signed in successfully",
           description: "Welcome back!"
         });
         
-        // Update app context
-        setCurrentUser({
-          id: userData.id,
-          name: userData.name,
-          username: userData.username,
-          avatar: userData.avatar_url || 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?q=80&w=100&auto=format&fit=crop',
-          followers: userData.followers_count || 0
-        });
-        setIsLoggedIn(true);
-        
         navigate('/');
       }
     } catch (error: any) {
+      console.error('Sign in error:', error);
       toast({
         title: "Error signing in",
         description: error.message || "Invalid email or password",

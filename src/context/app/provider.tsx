@@ -79,23 +79,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const addPaper = async (paper: Paper) => {
     try {
       // First, add to Supabase
-      const { data, error } = await supabase
-        .from('papers')
-        .insert({
-          title: paper.title,
-          description: paper.description,
-          file_url: paper.fileUrl,
-          file_type: paper.fileType,
-          cover_image: paper.coverImage,
-          user_id: currentUser?.id
-        })
-        .select('*')
-        .single();
-        
-      if (error) throw error;
+      const newPaper = await api.addPaper({
+        title: paper.title,
+        description: paper.description,
+        fileUrl: paper.fileUrl,
+        fileType: paper.fileType,
+        coverImage: paper.coverImage,
+        user: paper.user
+      });
       
       // Then update local state
-      setPapersList(prevPapers => [paper, ...prevPapers]);
+      setPapersList(prevPapers => [newPaper, ...prevPapers]);
       return true;
     } catch (error) {
       console.error('Error adding paper:', error);
@@ -106,22 +100,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const addProject = async (project: Project) => {
     try {
       // First, add to Supabase
-      const { data, error } = await supabase
-        .from('projects')
-        .insert({
-          name: project.name,
-          description: project.description,
-          image_url: project.image,
-          sas_level: project.sasLevel,
-          user_id: currentUser?.id
-        })
-        .select('*')
-        .single();
-        
-      if (error) throw error;
+      const newProject = await api.addProject(project);
       
       // Then update local state
-      setProjectsList(prevProjects => [project, ...prevProjects]);
+      setProjectsList(prevProjects => [newProject, ...prevProjects]);
       return true;
     } catch (error) {
       console.error('Error adding project:', error);
@@ -132,22 +114,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const addPost = async (post: Post) => {
     try {
       // First, add to Supabase
-      const { data, error } = await supabase
-        .from('posts')
-        .insert({
-          title: post.title,
-          description: post.description,
-          media_url: post.media,
-          media_type: post.mediaType,
-          user_id: currentUser?.id
-        })
-        .select('*')
-        .single();
-        
-      if (error) throw error;
+      const newPost = await api.addPost({
+        title: post.title,
+        description: post.description,
+        media: post.media,
+        mediaType: post.mediaType,
+        user: post.user
+      });
       
       // Then update local state
-      setPostsList(prevPosts => [post, ...prevPosts]);
+      setPostsList(prevPosts => [newPost, ...prevPosts]);
       return true;
     } catch (error) {
       console.error('Error adding post:', error);
@@ -158,25 +134,100 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const addStory = async (story: Story) => {
     try {
       // First, add to Supabase
-      const { data, error } = await supabase
-        .from('stories')
-        .insert({
-          title: story.title,
-          content: story.content,
-          image_url: story.image,
-          user_id: currentUser?.id,
-          project_id: story.project?.id
-        })
-        .select('*')
-        .single();
-        
-      if (error) throw error;
+      const newStory = await api.addStory({
+        title: story.title,
+        content: story.content,
+        image: story.image,
+        user: story.user,
+        project: story.project
+      });
       
       // Then update local state
-      setStoriesList(prevStories => [story, ...prevStories]);
+      setStoriesList(prevStories => [newStory, ...prevStories]);
       return true;
     } catch (error) {
       console.error('Error adding story:', error);
+      return false;
+    }
+  };
+
+  // Delete functions
+  const deleteProject = async (projectId: string) => {
+    try {
+      await api.deleteProject(projectId);
+      setProjectsList(prevProjects => prevProjects.filter(project => project.id !== projectId));
+      toast({
+        title: "Project deleted",
+        description: "The project has been successfully removed.",
+      });
+      return true;
+    } catch (error) {
+      console.error('Error deleting project:', error);
+      toast({
+        title: "Delete failed",
+        description: "There was a problem deleting the project.",
+        variant: "destructive"
+      });
+      return false;
+    }
+  };
+  
+  const deletePost = async (postId: string) => {
+    try {
+      await api.deletePost(postId);
+      setPostsList(prevPosts => prevPosts.filter(post => post.id !== postId));
+      toast({
+        title: "Post deleted",
+        description: "The post has been successfully removed.",
+      });
+      return true;
+    } catch (error) {
+      console.error('Error deleting post:', error);
+      toast({
+        title: "Delete failed",
+        description: "There was a problem deleting the post.",
+        variant: "destructive"
+      });
+      return false;
+    }
+  };
+  
+  const deleteStory = async (storyId: string) => {
+    try {
+      await api.deleteStory(storyId);
+      setStoriesList(prevStories => prevStories.filter(story => story.id !== storyId));
+      toast({
+        title: "Story deleted",
+        description: "The story has been successfully removed.",
+      });
+      return true;
+    } catch (error) {
+      console.error('Error deleting story:', error);
+      toast({
+        title: "Delete failed",
+        description: "There was a problem deleting the story.",
+        variant: "destructive"
+      });
+      return false;
+    }
+  };
+  
+  const deletePaper = async (paperId: string) => {
+    try {
+      await api.deletePaper(paperId);
+      setPapersList(prevPapers => prevPapers.filter(paper => paper.id !== paperId));
+      toast({
+        title: "Paper deleted",
+        description: "The paper has been successfully removed.",
+      });
+      return true;
+    } catch (error) {
+      console.error('Error deleting paper:', error);
+      toast({
+        title: "Delete failed",
+        description: "There was a problem deleting the paper.",
+        variant: "destructive"
+      });
       return false;
     }
   };
@@ -196,6 +247,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         addProject,
         addPost,
         addStory,
+        deleteProject,
+        deletePost,
+        deleteStory,
+        deletePaper,
         isLoading
       }}
     >

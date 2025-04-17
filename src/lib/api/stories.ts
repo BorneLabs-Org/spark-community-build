@@ -140,3 +140,24 @@ export const addStory = async (story: Omit<Story, 'id' | 'createdAt'>) => {
     throw error;
   }
 };
+
+export const deleteStory = async (storyId: string) => {
+  try {
+    console.log(`Deleting story with ID: ${storyId}`);
+    const { error } = await supabase
+      .from('stories')
+      .delete()
+      .eq('id', storyId);
+      
+    if (error) {
+      console.error('Error deleting story:', error);
+      throw error;
+    }
+    
+    console.log(`Story ${storyId} deleted successfully`);
+    return true;
+  } catch (error) {
+    console.error('Failed to delete story:', error);
+    throw error;
+  }
+};

@@ -113,3 +113,24 @@ export const addPost = async (post: Omit<Post, 'id' | 'createdAt' | 'views'>) =>
     throw error;
   }
 };
+
+export const deletePost = async (postId: string) => {
+  try {
+    console.log(`Deleting post with ID: ${postId}`);
+    const { error } = await supabase
+      .from('posts')
+      .delete()
+      .eq('id', postId);
+      
+    if (error) {
+      console.error('Error deleting post:', error);
+      throw error;
+    }
+    
+    console.log(`Post ${postId} deleted successfully`);
+    return true;
+  } catch (error) {
+    console.error('Failed to delete post:', error);
+    throw error;
+  }
+};

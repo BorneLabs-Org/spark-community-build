@@ -111,3 +111,24 @@ export const addProject = async (project: Omit<Project, 'id'>) => {
     throw error;
   }
 };
+
+export const deleteProject = async (projectId: string) => {
+  try {
+    console.log(`Deleting project with ID: ${projectId}`);
+    const { error } = await supabase
+      .from('projects')
+      .delete()
+      .eq('id', projectId);
+      
+    if (error) {
+      console.error('Error deleting project:', error);
+      throw error;
+    }
+    
+    console.log(`Project ${projectId} deleted successfully`);
+    return true;
+  } catch (error) {
+    console.error('Failed to delete project:', error);
+    throw error;
+  }
+};

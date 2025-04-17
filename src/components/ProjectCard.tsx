@@ -2,12 +2,17 @@
 import React from 'react';
 import { Project } from '@/types';
 import { Bookmark } from 'lucide-react';
+import { useAppContext } from '@/context/app';
+import DeleteButton from '@/components/DeleteButton';
 
 interface ProjectCardProps {
   project: Project;
 }
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
+  const { currentUser, deleteProject } = useAppContext();
+  const isOwner = currentUser?.id === project.user.id;
+
   return (
     <div className="relative w-full h-full px-2">
       <div className="relative bg-[#121212] rounded-md overflow-hidden group cursor-pointer h-full">
@@ -33,6 +38,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
         <button className="absolute top-2 right-2 bg-[#222] p-1 rounded-md hover:bg-[#333] transition-colors">
           <Bookmark size={18} className={project.bookmarked ? "fill-yellow-500 text-yellow-500" : "text-white"} />
         </button>
+
+        {isOwner && (
+          <DeleteButton onDelete={() => deleteProject(project.id)} />
+        )}
       </div>
     </div>
   );

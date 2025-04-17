@@ -10,13 +10,17 @@ const defaultContext: AppContextType = {
   stories: [],
   papers: [],
   isLoggedIn: false,
-  isLoading: false, // Added the missing property
+  isLoading: false,
   setIsLoggedIn: () => {},
   setCurrentUser: () => {},
-  addProject: () => {},
-  addPost: () => {},
-  addStory: () => {},
-  addPaper: () => {}
+  addProject: async () => false,
+  addPost: async () => false,
+  addStory: async () => false,
+  addPaper: async () => false,
+  deleteProject: async () => false,
+  deletePost: async () => false,
+  deleteStory: async () => false,
+  deletePaper: async () => false
 };
 
 // Create the context

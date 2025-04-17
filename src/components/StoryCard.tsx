@@ -6,6 +6,8 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Card } from '@/components/ui/card';
 import { BookOpen, Calendar, Bookmark } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import { useAppContext } from '@/context/app';
+import DeleteButton from '@/components/DeleteButton';
 
 interface StoryCardProps {
   story: Story;
@@ -14,6 +16,8 @@ interface StoryCardProps {
 
 const StoryCard = ({ story, isCompact = false }: StoryCardProps) => {
   const { title, content, user, createdAt, project, image } = story;
+  const { currentUser, deleteStory } = useAppContext();
+  const isOwner = currentUser?.id === story.user.id;
   
   // Format the date to relative time (e.g., "3 days ago")
   const formattedDate = formatDistanceToNow(new Date(createdAt), { addSuffix: true });
@@ -24,7 +28,7 @@ const StoryCard = ({ story, isCompact = false }: StoryCardProps) => {
     : content;
 
   return (
-    <Card className="bg-[#1a1a1a] border-gray-800 hover:border-gray-700 transition-all overflow-hidden">
+    <Card className="bg-[#1a1a1a] border-gray-800 hover:border-gray-700 transition-all overflow-hidden relative">
       <div className={`${isCompact ? 'p-4' : 'p-6'}`}>
         <div className="flex justify-between items-start mb-4">
           <div className="flex items-center gap-3">
@@ -87,6 +91,10 @@ const StoryCard = ({ story, isCompact = false }: StoryCardProps) => {
           )}
         </div>
       </div>
+
+      {isOwner && (
+        <DeleteButton onDelete={() => deleteStory(story.id)} className="bottom-4 right-4" />
+      )}
     </Card>
   );
 };

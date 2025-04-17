@@ -5,6 +5,8 @@ import { Download } from 'lucide-react';
 import { Paper } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { useAppContext } from '@/context/app';
+import DeleteButton from '@/components/DeleteButton';
 
 interface PaperCardProps {
   paper: Paper;
@@ -12,6 +14,9 @@ interface PaperCardProps {
 }
 
 const PaperCard = ({ paper, variant = 'grid' }: PaperCardProps) => {
+  const { currentUser, deletePaper } = useAppContext();
+  const isOwner = currentUser?.id === paper.user.id;
+  
   const handleDownload = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -20,7 +25,7 @@ const PaperCard = ({ paper, variant = 'grid' }: PaperCardProps) => {
 
   if (variant === 'vertical') {
     return (
-      <Card className="overflow-hidden bg-[#222] border-gray-700 flex flex-col h-[350px]">
+      <Card className="overflow-hidden bg-[#222] border-gray-700 flex flex-col h-[350px] relative">
         <div className="relative overflow-hidden h-[200px]">
           <Button 
             variant="ghost" 
@@ -54,12 +59,16 @@ const PaperCard = ({ paper, variant = 'grid' }: PaperCardProps) => {
             </div>
           </div>
         </CardContent>
+        
+        {isOwner && (
+          <DeleteButton onDelete={() => deletePaper(paper.id)} />
+        )}
       </Card>
     );
   }
 
   return (
-    <Card className="overflow-hidden bg-[#222] border-gray-700">
+    <Card className="overflow-hidden bg-[#222] border-gray-700 relative">
       <div className="relative overflow-hidden">
         <Button 
           variant="ghost" 
@@ -80,6 +89,10 @@ const PaperCard = ({ paper, variant = 'grid' }: PaperCardProps) => {
           <h3 className="text-md font-medium text-white hover:text-gray-300 truncate">{paper.title}</h3>
         </Link>
       </CardContent>
+      
+      {isOwner && (
+        <DeleteButton onDelete={() => deletePaper(paper.id)} />
+      )}
     </Card>
   );
 };

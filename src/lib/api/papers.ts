@@ -117,3 +117,24 @@ export const addPaper = async (paper: Omit<Paper, 'id' | 'createdAt' | 'download
     throw error;
   }
 };
+
+export const deletePaper = async (paperId: string) => {
+  try {
+    console.log(`Deleting paper with ID: ${paperId}`);
+    const { error } = await supabase
+      .from('papers')
+      .delete()
+      .eq('id', paperId);
+      
+    if (error) {
+      console.error('Error deleting paper:', error);
+      throw error;
+    }
+    
+    console.log(`Paper ${paperId} deleted successfully`);
+    return true;
+  } catch (error) {
+    console.error('Failed to delete paper:', error);
+    throw error;
+  }
+};

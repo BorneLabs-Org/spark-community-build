@@ -11,8 +11,12 @@ export interface AppContextType {
   posts: Post[];
   stories: Story[];
   papers: Paper[];
-  addPaper: (paper: Paper) => void;
-  addProject: (project: Project) => void;
-  addPost: (post: Post) => void;
-  addStory: (story: Story) => void;
+  addPaper: (paper: Paper) => Promise<boolean>;
+  addProject: (project: Project) => Promise<boolean>;
+  addPost: (post: Post) => Promise<boolean>;
+  addStory: (story: Story) => Promise<boolean>;
+  deleteProject: (projectId: string) => Promise<boolean>;
+  deletePost: (postId: string) => Promise<boolean>;
+  deleteStory: (storyId: string) => Promise<boolean>;
+  deletePaper: (paperId: string) => Promise<boolean>;
 }

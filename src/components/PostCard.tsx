@@ -3,12 +3,17 @@ import React from 'react';
 import { Post } from '@/types';
 import { Eye, Bookmark } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import { useAppContext } from '@/context/app';
+import DeleteButton from '@/components/DeleteButton';
 
 interface PostCardProps {
   post: Post;
 }
 
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
+  const { currentUser, deletePost } = useAppContext();
+  const isOwner = currentUser?.id === post.user.id;
+
   return (
     <div className="relative w-full max-w-xs">
       <div className="relative bg-[#121212] rounded-md overflow-hidden group cursor-pointer h-full">
@@ -43,6 +48,10 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
         <button className="absolute top-2 right-2 bg-[#222] p-1 rounded-md hover:bg-[#333] transition-colors">
           <Bookmark size={14} className="text-white" />
         </button>
+
+        {isOwner && (
+          <DeleteButton onDelete={() => deletePost(post.id)} />
+        )}
       </div>
     </div>
   );

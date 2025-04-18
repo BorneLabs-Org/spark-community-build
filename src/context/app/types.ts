@@ -11,7 +11,7 @@ export interface AppContextType {
   posts: Post[];
   stories: Story[];
   papers: Paper[];
-  addPaper: (paper: Paper) => Promise<boolean>;
+  addPaper: (paper: Omit<Paper, 'id' | 'createdAt' | 'downloads'>) => Promise<boolean>;
   addProject: (project: Omit<Project, 'id'>) => Promise<boolean>;
   addPost: (post: Post) => Promise<boolean>;
   addStory: (story: Story) => Promise<boolean>;

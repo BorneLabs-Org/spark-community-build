@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useAppContext } from '@/context/app';
 import { DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
@@ -5,11 +6,12 @@ import { Button } from '@/components/ui/button';
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { Story } from '@/types';
-import { Image } from 'lucide-react';
+import { Upload } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { uploadFile } from '@/lib/api/utils';
 
@@ -132,7 +134,7 @@ export const StoryDialog = ({ onComplete }: StoryDialogProps) => {
           />
           
           <div className="space-y-2">
-            <Label>Story Image</Label>
+            <Label className="text-white">Story Image</Label>
             <div className="border-2 border-dashed border-gray-700 rounded-md p-4 text-center">
               <input
                 type="file"

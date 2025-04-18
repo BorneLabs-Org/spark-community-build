@@ -48,6 +48,7 @@ export const ProjectDialog = () => {
       if (!imageUrl) throw new Error('Failed to upload image');
       
       const newProject = {
+        id: `project-${Date.now()}`, // Add an ID for the project
         name: projectName,
         description,
         image: imageUrl,

@@ -4,6 +4,7 @@ import { Project } from '@/types';
 import { Bookmark } from 'lucide-react';
 import { useAppContext } from '@/context/app';
 import DeleteButton from '@/components/DeleteButton';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 interface ProjectCardProps {
   project: Project;
@@ -12,10 +13,20 @@ interface ProjectCardProps {
 const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   const { currentUser, deleteProject } = useAppContext();
   const isOwner = currentUser?.id === project.user.id;
+  const navigate = useNavigate();
+  const location = useLocation();
+  const isProfilePage = location.pathname.includes('/profile');
+
+  const handleClick = () => {
+    navigate(`/projects/${project.id}`, { state: { project } });
+  };
 
   return (
     <div className="relative w-full h-full px-2">
-      <div className="relative bg-[#121212] rounded-md overflow-hidden group cursor-pointer h-full">
+      <div 
+        className="relative bg-[#121212] rounded-md overflow-hidden group cursor-pointer h-full"
+        onClick={handleClick}
+      >
         <div className="aspect-square overflow-hidden">
           <img 
             src={project.image} 
@@ -29,17 +40,11 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
           <h3 className="text-lg font-semibold text-white line-clamp-2">{project.name}</h3>
         </div>
         
-        {project.sasLevel && (
-          <div className="absolute top-2 left-2 bg-[#333] px-2 py-0.5 rounded text-sm text-white">
-            {project.sasLevel}
-          </div>
-        )}
-        
         <button className="absolute top-2 right-2 bg-[#222] p-1 rounded-md hover:bg-[#333] transition-colors">
           <Bookmark size={18} className={project.bookmarked ? "fill-yellow-500 text-yellow-500" : "text-white"} />
         </button>
 
-        {isOwner && (
+        {isOwner && isProfilePage && (
           <DeleteButton onDelete={() => deleteProject(project.id)} />
         )}
       </div>

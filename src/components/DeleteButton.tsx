@@ -20,7 +20,7 @@ const DeleteButton = ({ onDelete, className }: DeleteButtonProps) => {
     <Button
       variant="destructive"
       size="icon"
-      className={cn("absolute bottom-2 right-2 z-20 h-8 w-8 rounded-full opacity-90 shadow-md hover:opacity-100", className)}
+      className={cn("absolute bottom-2 right-2 z-20 h-8 w-8 rounded-full opacity-90 shadow-md hover:opacity-100 bg-teal-600 hover:bg-teal-700", className)}
       onClick={handleClick}
     >
       <Trash2 className="h-4 w-4" />

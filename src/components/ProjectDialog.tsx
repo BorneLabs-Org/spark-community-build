@@ -8,15 +8,13 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Upload } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { uploadFile } from '@/lib/api/utils';
 
 export const ProjectDialog = () => {
   const { addProject, currentUser } = useAppContext();
   const { toast } = useToast();
   const [projectName, setProjectName] = useState('');
-  const [projectId, setProjectId] = useState('');
   const [description, setDescription] = useState('');
-  const [sasLevel, setSasLevel] = useState('SAS.1');
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   
@@ -32,10 +30,10 @@ export const ProjectDialog = () => {
     }
   };
   
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!projectName || !projectId || !description || !imagePreview) {
+    if (!projectName || !description || !imageFile) {
       toast({
         title: "Missing fields",
         description: "Please fill in all required fields and add an image",
@@ -44,32 +42,37 @@ export const ProjectDialog = () => {
       return;
     }
 
-    // In a real app, we would upload the image to a storage service
-    // For now, we'll just use the preview URL
-    
-    const newProject = {
-      id: Date.now().toString(),
-      name: projectName,
-      description,
-      image: imagePreview,
-      user: currentUser!,
-      sasLevel: sasLevel
-    };
-    
-    addProject(newProject);
-    
-    toast({
-      title: "Project created",
-      description: "Your project has been successfully created"
-    });
-    
-    // Reset form
-    setProjectName('');
-    setProjectId('');
-    setDescription('');
-    setSasLevel('SAS.1');
-    setImageFile(null);
-    setImagePreview(null);
+    try {
+      // Upload image to storage
+      const imageUrl = await uploadFile(imageFile, 'projects');
+      if (!imageUrl) throw new Error('Failed to upload image');
+      
+      const newProject = {
+        name: projectName,
+        description,
+        image: imageUrl,
+        user: currentUser!
+      };
+      
+      await addProject(newProject);
+      
+      toast({
+        title: "Project created",
+        description: "Your project has been successfully created"
+      });
+      
+      // Reset form
+      setProjectName('');
+      setDescription('');
+      setImageFile(null);
+      setImagePreview(null);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to create project",
+        variant: "destructive"
+      });
+    }
   };
   
   return (
@@ -93,16 +96,6 @@ export const ProjectDialog = () => {
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="projectId">Project ID (required)</Label>
-          <Input
-            id="projectId"
-            value={projectId}
-            onChange={(e) => setProjectId(e.target.value)}
-            className="bg-[#1a1a1a] border-gray-700"
-          />
-        </div>
-        
-        <div className="space-y-2">
           <Label htmlFor="description">Project Description (required)</Label>
           <Textarea
             id="description"
@@ -110,21 +103,6 @@ export const ProjectDialog = () => {
             onChange={(e) => setDescription(e.target.value)}
             className="bg-[#1a1a1a] border-gray-700 min-h-[100px]"
           />
-        </div>
-        
-        <div className="space-y-2">
-          <Label htmlFor="sasLevel">SAS Level</Label>
-          <Select value={sasLevel} onValueChange={(value) => setSasLevel(value)}>
-            <SelectTrigger className="bg-[#1a1a1a] border-gray-700">
-              <SelectValue placeholder="Select SAS level" />
-            </SelectTrigger>
-            <SelectContent className="bg-[#1a1a1a] border-gray-700 text-white">
-              <SelectItem value="SAS.1">SAS.1</SelectItem>
-              <SelectItem value="SAS.2">SAS.2</SelectItem>
-              <SelectItem value="SAS.3">SAS.3</SelectItem>
-              <SelectItem value="SAS.4">SAS.4</SelectItem>
-            </SelectContent>
-          </Select>
         </div>
         
         <div className="space-y-2">
@@ -170,7 +148,7 @@ export const ProjectDialog = () => {
         </div>
         
         <DialogFooter>
-          <Button type="submit" className="w-full bg-branding-blue hover:bg-blue-700">
+          <Button type="submit" className="w-full bg-teal-600 hover:bg-teal-700">
             Create Project
           </Button>
         </DialogFooter>

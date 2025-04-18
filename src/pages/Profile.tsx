@@ -14,9 +14,10 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Upload, X, UserPlus } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import BackToHomeButton from '@/components/BackToHomeButton';
 
 const Profile = () => {
-  const { currentUser, projects, posts, stories, papers } = useAppContext();
+  const { currentUser, projects, posts, stories, papers, isLoggedIn } = useAppContext();
   const [isFollowing, setIsFollowing] = useState(false);
   const [profileImagePreview, setProfileImagePreview] = useState<string | null>(null);
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
@@ -56,12 +57,14 @@ const Profile = () => {
       
       <div className="flex flex-1 pt-[60px]">
         {/* Left Sidebar - hidden on mobile */}
-        <div className="fixed top-[60px] bottom-0 left-0 w-56 overflow-y-auto">
+        <div className="hidden md:block fixed top-[60px] bottom-0 left-0 w-56 overflow-y-auto">
           <Sidebar />
         </div>
         
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto py-6 px-4 md:px-8 ml-56 mr-0 md:mr-64">
+        <main className="flex-1 overflow-y-auto py-6 px-4 md:px-8 md:ml-56 md:mr-0 md:mr-64 w-full">
+          <BackToHomeButton />
+          
           <div className="max-w-4xl mx-auto">
             {/* Profile Header */}
             <div className="bg-[#1a1a1a] rounded-lg p-6 mb-6">
@@ -95,7 +98,7 @@ const Profile = () => {
                               type="button"
                               variant="outline"
                               onClick={() => document.getElementById('profile-image')?.click()}
-                              className="mt-2"
+                              className="mt-2 bg-teal-600 hover:bg-teal-500 text-white"
                             >
                               Select Image
                             </Button>
@@ -221,10 +224,12 @@ const Profile = () => {
           </div>
         </main>
         
-        {/* Right Sidebar - hidden on mobile */}
-        <div className="hidden md:block fixed top-[60px] bottom-0 right-0 w-64 overflow-y-auto">
-          <RightSidebar />
-        </div>
+        {/* Right Sidebar - correctly positioned and hidden on mobile */}
+        {isLoggedIn && (
+          <div className="hidden md:block fixed top-[60px] bottom-0 right-0 w-64 overflow-y-auto">
+            <RightSidebar />
+          </div>
+        )}
       </div>
     </div>
   );

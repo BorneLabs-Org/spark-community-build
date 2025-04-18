@@ -88,7 +88,9 @@ export const addProject = async (project: Omit<Project, 'id'>) => {
         description: project.description,
         image_url: project.image,
         sas_level: project.sasLevel,
-        user_id: project.user.id
+        user_id: project.user.id,
+        project_id: project.projectId, // Add project_id field
+        status: project.status || 'pending' // Add status field
       })
       .select()
       .single();
@@ -104,7 +106,9 @@ export const addProject = async (project: Omit<Project, 'id'>) => {
       description: data.description,
       image: data.image_url,
       sasLevel: data.sas_level,
-      user: project.user
+      user: project.user,
+      projectId: data.project_id,
+      status: data.status
     } as Project;
   } catch (error) {
     console.error('Failed to add project:', error);

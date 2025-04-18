@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { AppContext } from './context';
 import { User, Paper, Project, Post, Story } from '@/types';
@@ -97,10 +96,45 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   };
   
-  const addProject = async (project: Project) => {
+  const addProject = async (project: Omit<Project, 'id'>) => {
     try {
-      // First, add to Supabase
+      console.log('Adding project:', project);
+      
+      // First, add project to Supabase
       const newProject = await api.addProject(project);
+      
+      // Now send notification to all admin users
+      try {
+        // Get all admin users
+        const { data: adminRoles } = await supabase
+          .from('user_roles')
+          .select('user_id')
+          .eq('role', 'admin');
+          
+        if (adminRoles && adminRoles.length > 0) {
+          console.log('Found admin users:', adminRoles);
+          
+          // Create notifications for each admin
+          const notificationPromises = adminRoles.map(admin => {
+            return supabase
+              .from('notifications')
+              .insert({
+                to_user: admin.user_id,
+                from_user: project.user.id,
+                type: 'project_approval',
+                related_project_id: newProject.id
+              });
+          });
+          
+          await Promise.all(notificationPromises);
+          console.log('Admin notifications sent successfully');
+        } else {
+          console.log('No admin users found to notify');
+        }
+      } catch (notifyError) {
+        console.error('Error notifying admins:', notifyError);
+        // We don't throw here to avoid failing the project creation
+      }
       
       // Then update local state
       setProjectsList(prevProjects => [newProject, ...prevProjects]);

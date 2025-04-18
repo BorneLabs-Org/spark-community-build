@@ -1,4 +1,5 @@
 
+
 export interface User {
   id: string;
   name: string;
@@ -52,3 +53,4 @@ export interface Paper {
   createdAt: string;
   downloads?: number;
 }
+

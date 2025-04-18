@@ -5,42 +5,29 @@ import Navbar from '@/components/Navbar';
 import Sidebar from '@/components/Sidebar';
 import RightSidebar from '@/components/RightSidebar';
 import StoryCard from '@/components/StoryCard';
-import { Plus, Filter } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import BackToHomeButton from '@/components/BackToHomeButton';
 
 const Stories = () => {
   const { stories, isLoggedIn } = useAppContext();
   
   return (
     <div className="min-h-screen bg-[#121212] flex flex-col">
-      <Navbar />
+      <div className="fixed top-0 left-0 right-0 z-50">
+        <Navbar />
+      </div>
       
-      <div className="flex flex-1 overflow-hidden">
-        <div className="fixed top-16 left-0 bottom-0 w-56 z-10">
+      <div className="flex flex-1 pt-[60px]">
+        {/* Left Sidebar - hidden on mobile */}
+        <div className="hidden md:block fixed top-[60px] bottom-0 left-0 w-56 overflow-y-auto">
           <Sidebar />
         </div>
         
-        <main className="flex-1 overflow-y-auto py-6 px-8 ml-56 mr-0 md:mr-64">
-          <div className="mb-8">
-            <div className="flex justify-between items-center mb-6">
-              <div className="flex items-center">
-                <div className="text-branding-amber mr-2">📚</div>
-                <h2 className="text-xl font-bold text-white">Stories</h2>
-              </div>
-              <div className="flex items-center gap-3">
-                <button className="bg-[#222] p-1 rounded hover:bg-[#333]">
-                  <Filter size={16} className="text-gray-400" />
-                </button>
-                {isLoggedIn && (
-                  <Button 
-                    className="bg-teal-700 hover:bg-teal-600 text-white flex items-center gap-2"
-                  >
-                    <Plus size={16} />
-                    <span>Write Story</span>
-                  </Button>
-                )}
-              </div>
-            </div>
+        {/* Main Content */}
+        <main className="flex-1 overflow-y-auto py-6 px-4 md:px-8 md:ml-56 md:mr-64 w-full">
+          <BackToHomeButton />
+          
+          <div className="max-w-4xl mx-auto">
+            <h1 className="text-2xl font-bold mb-6">Stories</h1>
             
             <div className="grid grid-cols-1 gap-6">
               {stories.map(story => (
@@ -48,18 +35,17 @@ const Stories = () => {
               ))}
               
               {stories.length === 0 && (
-                <div className="flex flex-col items-center justify-center py-20 text-gray-500">
-                  <div className="text-4xl mb-4">📚</div>
-                  <p className="text-lg mb-2">No stories to show</p>
-                  <p className="text-sm">Be the first to share your project journey</p>
+                <div className="text-center py-10 text-gray-400">
+                  <p>No stories yet</p>
                 </div>
               )}
             </div>
           </div>
         </main>
         
+        {/* Right Sidebar - hidden on mobile */}
         {isLoggedIn && (
-          <div className="hidden md:block fixed top-16 right-0 bottom-0 w-64">
+          <div className="hidden md:block fixed top-[60px] bottom-0 right-0 w-64 overflow-y-auto">
             <RightSidebar />
           </div>
         )}

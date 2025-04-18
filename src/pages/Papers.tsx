@@ -27,7 +27,7 @@ const Papers = () => {
           <BackToHomeButton />
           
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-2xl font-bold mb-6">Papers</h1>
+            <h1 className="text-2xl font-bold mb-6 text-white">Papers</h1>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               {papers && papers.length > 0 ? (

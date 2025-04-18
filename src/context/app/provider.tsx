@@ -75,23 +75,28 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   }, [isLoggedIn]);
   
-  const addPaper = async (paper: Paper) => {
+  const addPaper = async (paper: Omit<Paper, 'id' | 'createdAt' | 'downloads'>) => {
     try {
+      console.log('Adding paper:', paper);
       // First, add to Supabase
-      const newPaper = await api.addPaper({
-        title: paper.title,
-        description: paper.description,
-        fileUrl: paper.fileUrl,
-        fileType: paper.fileType,
-        coverImage: paper.coverImage,
-        user: paper.user
-      });
+      const newPaper = await api.addPaper(paper);
       
       // Then update local state
       setPapersList(prevPapers => [newPaper, ...prevPapers]);
+      
+      toast({
+        title: "Success",
+        description: "Paper published successfully"
+      });
+      
       return true;
     } catch (error) {
       console.error('Error adding paper:', error);
+      toast({
+        title: "Error",
+        description: "Failed to publish paper",
+        variant: "destructive"
+      });
       return false;
     }
   };

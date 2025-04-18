@@ -83,6 +83,7 @@ export const getPapers = async () => {
 
 export const addPaper = async (paper: Omit<Paper, 'id' | 'createdAt' | 'downloads'>) => {
   try {
+    console.log('Adding paper to Supabase:', paper);
     const { data, error } = await supabase
       .from('papers')
       .insert({
@@ -100,6 +101,8 @@ export const addPaper = async (paper: Omit<Paper, 'id' | 'createdAt' | 'download
       console.error('Error creating paper:', error);
       throw error;
     }
+    
+    console.log('Paper added successfully:', data);
     
     return {
       id: data.id,

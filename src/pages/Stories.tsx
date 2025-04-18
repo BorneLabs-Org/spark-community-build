@@ -27,14 +27,14 @@ const Stories = () => {
           <BackToHomeButton />
           
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-2xl font-bold mb-6">Stories</h1>
+            <h1 className="text-2xl font-bold mb-6 text-white">Stories</h1>
             
             <div className="grid grid-cols-1 gap-6">
-              {stories.map(story => (
-                <StoryCard key={story.id} story={story} />
-              ))}
-              
-              {stories.length === 0 && (
+              {stories && stories.length > 0 ? (
+                stories.map(story => (
+                  <StoryCard key={story.id} story={story} />
+                ))
+              ) : (
                 <div className="text-center py-10 text-gray-400">
                   <p>No stories yet</p>
                 </div>

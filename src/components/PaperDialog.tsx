@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useAppContext } from '@/context/app';
 import { Upload, X } from 'lucide-react';
@@ -15,6 +14,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
+import { uploadFile } from '@/lib/api/utils';
 import { Paper } from '@/types';
 
 interface PaperDialogProps {
@@ -59,7 +59,7 @@ const PaperDialog = ({ onComplete }: PaperDialogProps) => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!title.trim()) {
@@ -89,33 +89,61 @@ const PaperDialog = ({ onComplete }: PaperDialogProps) => {
       return;
     }
 
+    if (!currentUser) {
+      toast({
+        title: "Error",
+        description: "You must be logged in to publish a paper",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsUploading(true);
 
-    // In a real app, you would upload files to server/storage
-    // For this demo, we'll simulate upload and use local URLs
-    setTimeout(() => {
-      const newPaper: Paper = {
-        id: `paper-${Date.now()}`,
+    try {
+      // Upload files to storage
+      const [paperUrl, coverImageUrl] = await Promise.all([
+        uploadFile(paperFile, 'papers'),
+        uploadFile(coverImage, 'papers')
+      ]);
+
+      if (!paperUrl || !coverImageUrl) {
+        throw new Error('Failed to upload files');
+      }
+
+      // Create the paper
+      const newPaper: Omit<Paper, 'id' | 'createdAt' | 'downloads'> = {
         title,
         description,
-        fileUrl: URL.createObjectURL(paperFile),
+        fileUrl: paperUrl,
         fileType: determineFileType(paperFile.name),
-        coverImage: coverImagePreview,
-        user: currentUser!,
-        createdAt: new Date().toISOString(),
-        downloads: 0
+        coverImage: coverImageUrl,
+        user: currentUser
       };
 
-      addPaper(newPaper);
+      const success = await addPaper(newPaper);
       
+      if (success) {
+        // Reset form
+        setTitle('');
+        setDescription('');
+        setPaperFile(null);
+        setCoverImage(null);
+        setCoverImagePreview('');
+        
+        // Close dialog
+        onComplete?.();
+      }
+    } catch (error) {
+      console.error('Error publishing paper:', error);
       toast({
-        title: "Success",
-        description: "Paper published successfully",
+        title: "Error",
+        description: "Failed to publish paper. Please try again.",
+        variant: "destructive"
       });
-      
+    } finally {
       setIsUploading(false);
-      onComplete?.();
-    }, 1500);
+    }
   };
 
   return (

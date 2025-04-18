@@ -9,6 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Upload } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { uploadFile } from '@/lib/api/utils';
+import { Project } from '@/types';
 
 export const ProjectDialog = () => {
   const { addProject, currentUser } = useAppContext();
@@ -47,7 +48,8 @@ export const ProjectDialog = () => {
       const imageUrl = await uploadFile(imageFile, 'projects');
       if (!imageUrl) throw new Error('Failed to upload image');
       
-      const newProject = {
+      // Create a partial project without id first
+      const newProject: Omit<Project, 'id'> = {
         name: projectName,
         description,
         image: imageUrl,
@@ -56,6 +58,7 @@ export const ProjectDialog = () => {
         status: 'pending'
       };
       
+      // Pass to addProject which will handle adding the ID when saving to database
       await addProject(newProject);
       
       toast({

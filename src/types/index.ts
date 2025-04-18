@@ -1,4 +1,3 @@
-
 export interface User {
   id: string;
   name: string;
@@ -13,6 +12,8 @@ export interface Project {
   description: string;
   image: string;
   user: User;
+  projectId?: string;
+  status?: 'pending' | 'approved' | 'rejected';
   bookmarked?: boolean;
   sasLevel?: string;
 }

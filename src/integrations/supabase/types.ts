@@ -41,6 +41,76 @@ export type Database = {
           },
         ]
       }
+      collaborations: {
+        Row: {
+          created_at: string | null
+          id: string
+          project_id: string
+          status: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          project_id: string
+          status?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          project_id?: string
+          status?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "collaborations_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          created_at: string | null
+          from_user: string
+          id: string
+          related_project_id: string | null
+          status: string | null
+          to_user: string
+          type: string
+        }
+        Insert: {
+          created_at?: string | null
+          from_user: string
+          id?: string
+          related_project_id?: string | null
+          status?: string | null
+          to_user: string
+          type: string
+        }
+        Update: {
+          created_at?: string | null
+          from_user?: string
+          id?: string
+          related_project_id?: string | null
+          status?: string | null
+          to_user?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_related_project_id_fkey"
+            columns: ["related_project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       posts: {
         Row: {
           created_at: string | null
@@ -92,7 +162,9 @@ export type Database = {
           id: string
           image_url: string
           name: string
+          project_id: string | null
           sas_level: string | null
+          status: string | null
           updated_at: string | null
           user_id: string
         }
@@ -102,7 +174,9 @@ export type Database = {
           id?: string
           image_url: string
           name: string
+          project_id?: string | null
           sas_level?: string | null
+          status?: string | null
           updated_at?: string | null
           user_id: string
         }
@@ -112,7 +186,9 @@ export type Database = {
           id?: string
           image_url?: string
           name?: string
+          project_id?: string | null
           sas_level?: string | null
+          status?: string | null
           updated_at?: string | null
           user_id?: string
         }
@@ -173,6 +249,27 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       users: {
         Row: {

@@ -14,6 +14,7 @@ export const ProjectDialog = () => {
   const { addProject, currentUser } = useAppContext();
   const { toast } = useToast();
   const [projectName, setProjectName] = useState('');
+  const [projectId, setProjectId] = useState('');
   const [description, setDescription] = useState('');
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -33,7 +34,7 @@ export const ProjectDialog = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!projectName || !description || !imageFile) {
+    if (!projectName || !description || !imageFile || !projectId) {
       toast({
         title: "Missing fields",
         description: "Please fill in all required fields and add an image",
@@ -43,27 +44,28 @@ export const ProjectDialog = () => {
     }
 
     try {
-      // Upload image to storage
       const imageUrl = await uploadFile(imageFile, 'projects');
       if (!imageUrl) throw new Error('Failed to upload image');
       
       const newProject = {
-        id: `project-${Date.now()}`, // Add an ID for the project
         name: projectName,
         description,
         image: imageUrl,
-        user: currentUser!
+        user: currentUser!,
+        projectId: projectId,
+        status: 'pending'
       };
       
       await addProject(newProject);
       
       toast({
         title: "Project created",
-        description: "Your project has been successfully created"
+        description: "Your project is pending admin approval"
       });
       
       // Reset form
       setProjectName('');
+      setProjectId('');
       setDescription('');
       setImageFile(null);
       setImagePreview(null);
@@ -93,6 +95,17 @@ export const ProjectDialog = () => {
             value={projectName}
             onChange={(e) => setProjectName(e.target.value)}
             className="bg-[#1a1a1a] border-gray-700"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="projectId">Project ID (required, e.g., SAS-1)</Label>
+          <Input
+            id="projectId"
+            value={projectId}
+            onChange={(e) => setProjectId(e.target.value)}
+            className="bg-[#1a1a1a] border-gray-700"
+            placeholder="SAS-1"
           />
         </div>
         

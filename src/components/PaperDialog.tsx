@@ -103,12 +103,12 @@ const PaperDialog = ({ onComplete }: PaperDialogProps) => {
 
     try {
       // Upload files to storage
-      const [paperUrl, coverImageUrl] = await Promise.all([
+      const [fileUrl, coverImageUrl] = await Promise.all([
         uploadFile(paperFile, 'papers'),
         uploadFile(coverImage, 'papers')
       ]);
 
-      if (!paperUrl || !coverImageUrl) {
+      if (!fileUrl || !coverImageUrl) {
         throw new Error('Failed to upload files');
       }
 
@@ -116,7 +116,7 @@ const PaperDialog = ({ onComplete }: PaperDialogProps) => {
       const newPaper: Omit<Paper, 'id' | 'createdAt' | 'downloads'> = {
         title,
         description,
-        fileUrl: paperUrl,
+        fileUrl,
         fileType: determineFileType(paperFile.name),
         coverImage: coverImageUrl,
         user: currentUser
@@ -125,6 +125,11 @@ const PaperDialog = ({ onComplete }: PaperDialogProps) => {
       const success = await addPaper(newPaper);
       
       if (success) {
+        toast({
+          title: "Success",
+          description: "Paper published successfully"
+        });
+        
         // Reset form
         setTitle('');
         setDescription('');

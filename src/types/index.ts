@@ -50,5 +50,5 @@ export interface Paper {
   coverImage: string;
   user: User;
   createdAt: string;
-  downloads?: number;
+  downloads: number;
 }

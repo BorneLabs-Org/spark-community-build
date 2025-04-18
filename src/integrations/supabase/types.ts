@@ -111,6 +111,42 @@ export type Database = {
           },
         ]
       }
+      papers: {
+        Row: {
+          cover_image: string
+          created_at: string
+          description: string | null
+          downloads: number | null
+          file_type: string
+          file_url: string
+          id: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          cover_image: string
+          created_at?: string
+          description?: string | null
+          downloads?: number | null
+          file_type: string
+          file_url: string
+          id?: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          cover_image?: string
+          created_at?: string
+          description?: string | null
+          downloads?: number | null
+          file_type?: string
+          file_url?: string
+          id?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       posts: {
         Row: {
           created_at: string | null
